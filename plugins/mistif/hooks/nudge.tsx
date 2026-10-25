@@ -1,13 +1,14 @@
 import { atom, read, update } from 'claude-code'
 
 // Nudge: one short session section that asks Claude to check the mistif skills before software work. Models rarely
-// load a skill unprompted, and this is the whole fix. On or off, kept in the mod's store. The environment variable
-// MISTIF_NUDGE=off|on overrides the stored level at session start, so a test run can try both. The idea of
+// load a skill unprompted, and this is the whole fix. Off by default: it made Haiku load a skill but cost about 50%
+// more per run with no measured quality gain on an easy suite. On or off, kept in the mod's store. The environment
+// variable MISTIF_NUDGE=off|on overrides the stored level at session start, so a test run can try both. The idea of
 // a session-start reminder is inspired by superpowers' session-start hook; the wording is our own.
 export const NUDGE_LEVELS = ['off', 'on'] as const
 export type NudgeLevel = (typeof NUDGE_LEVELS)[number]
 
-const nudgeLevel = atom({ plugin: 'mistif', key: 'nudgeLevel' } as const, 'on' as NudgeLevel)
+const nudgeLevel = atom({ plugin: 'mistif', key: 'nudgeLevel' } as const, 'off' as NudgeLevel)
 
 export const NUDGE_TEXT =
   'For software work, check whether a mistif skill fits (interview, build, test, review, ship, design, decide) and load it with the Skill tool before you start. Skip this for plain questions and one-line asks.'
@@ -17,7 +18,7 @@ const asLevel = (v: unknown): NudgeLevel | undefined => (NUDGE_LEVELS.includes(v
 export async function nudgeSessionStart($: any, e: any, next: any) {
   const stored = await $.store.get('nudgeLevel').catch(() => null)
   const fromEnv = await $.env.get('MISTIF_NUDGE').catch(() => null)
-  await update($, nudgeLevel, () => asLevel(String(fromEnv ?? '').trim().toLowerCase()) ?? asLevel(stored) ?? 'on')
+  await update($, nudgeLevel, () => asLevel(String(fromEnv ?? '').trim().toLowerCase()) ?? asLevel(stored) ?? 'off')
   return next(e)
 }
 

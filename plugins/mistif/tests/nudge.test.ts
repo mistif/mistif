@@ -29,8 +29,17 @@ const ids = async ($: Engine) => (await $.prompt.compose(input)).sections.map(s 
 const nudge = ($: Engine, args: string) => $.command.run({ command: 'nudge', args })
 
 describe('nudge', () => {
-  test('on by default: one short session section is added', async ($, on) => {
+  test('off by default: no section is added', async ($, on) => {
     engine(on)
+    await start($)
+    expect(await ids($)).toEqual(['intro'])
+  })
+
+  test('on adds one short session section, and the level is kept for the next session', async ($, on) => {
+    const store = engine(on)
+    await start($)
+    await nudge($, 'on')
+    expect(store.get('nudgeLevel')).toBe('on')
     await start($)
     const sections = (await $.prompt.compose(input)).sections
     expect(sections.map(s => s.id)).toEqual(['intro', 'mistif:nudge'])
@@ -41,12 +50,18 @@ describe('nudge', () => {
   test('off takes the section away, and the level is kept for the next session', async ($, on) => {
     const store = engine(on)
     await start($)
+    await nudge($, 'on')
+    expect(await ids($)).toContain('mistif:nudge')
     expect((await nudge($, 'off')).text).toContain('off')
     expect(await ids($)).toEqual(['intro'])
     expect(store.get('nudgeLevel')).toBe('off')
     await start($)
     expect(await ids($)).toEqual(['intro'])
-    await nudge($, 'on')
+  })
+
+  test('MISTIF_NUDGE=on turns it on with nothing stored', async ($, on) => {
+    engine(on, { MISTIF_NUDGE: 'on' })
+    await start($)
     expect(await ids($)).toContain('mistif:nudge')
   })
 
@@ -61,9 +76,9 @@ describe('nudge', () => {
     const store = engine(on, { MISTIF_NUDGE: 'loud' })
     store.set('nudgeLevel', 'bogus')
     await start($)
-    expect(await ids($)).toContain('mistif:nudge')
+    expect(await ids($)).toEqual(['intro'])
     expect((await nudge($, 'loud')).text).toContain('Unknown level')
-    expect(await ids($)).toContain('mistif:nudge')
-    expect((await nudge($, '')).text).toContain('on')
+    expect(await ids($)).toEqual(['intro'])
+    expect((await nudge($, '')).text).toContain('off')
   })
 })

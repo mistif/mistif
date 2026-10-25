@@ -1,5 +1,5 @@
 ---
-description: Skill nudge, on or off
+description: Skill nudge, off by default; on or off
 argument-hint: off | on
 ---
 

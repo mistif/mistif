@@ -19,3 +19,4 @@ How to read them:
 | `runs/2026-10-25-retest/REPORT.md` | re-test of the Phase 1 fixes on fresh briefs |
 | `runs/2026-10-25-interview/REPORT.md` | the interview skill with a simulated user, four designs |
 | `runs/2026-10-25-nudge/REPORT.md` | Haiku loading mistif skills unprompted, nudge on vs off |
+| `runs/2026-10-25-public-bench/REPORT.md` | public mistif vs base Haiku, base Sonnet, superpowers, agent-skills and the old mistif set, 324 runs; the nudge cost and the design-page loss |
