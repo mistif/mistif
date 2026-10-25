@@ -18,7 +18,7 @@ ASSERT = re.compile(r"\b(assert|expect)\b")
 
 
 def git(*args):
-    r = subprocess.run(["git", *args], capture_output=True, text=True, encoding="utf-8", errors="replace")
+    r = subprocess.run(["git", "-c", "core.quotePath=false", *args], capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode:
         raise RuntimeError(r.stderr.strip())
     return r.stdout
@@ -77,6 +77,7 @@ def main():
     except (RuntimeError, OSError) as e:
         print(f"could not run: {e}", file=sys.stderr)
         return 2
+    sys.stdout.reconfigure(encoding="utf-8")  # accented file names survive a Windows code page
     print("\n".join(findings) or "clean")
     return 1 if findings else 0
 

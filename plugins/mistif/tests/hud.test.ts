@@ -150,7 +150,7 @@ describe('footer: mounted', () => {
     const ui = await $.ui.mount({ plugin: 'mistif', surface: 'desktop', component: 'SessionMode', props: { modes: [] } } as never)
     await ui.press({ key: 'auto' })
     await ui.press({ key: 'handoff' })
-    expect(ran).toEqual(['hud auto', 'hud handoff'])
+    expect(ran).toEqual(['mistif:hud auto', 'mistif:hud handoff'])
   })
 
   test('the settings button opens the settings card above the prompt', async ($, on) => {

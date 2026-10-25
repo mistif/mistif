@@ -19,11 +19,14 @@ def words(text):
 
 
 def headings(text):
-    return {re.sub(r"\W+", " ", h).strip().lower() for h in re.findall(r"^#+\s*(.+)$", text, re.M)}
+    found = {re.sub(r"\W+", " ", h).strip().lower() for h in re.findall(r"^#+\s*(.+)$", text, re.M)}
+    return found - {""}  # a heading of only punctuation says nothing
 
 
 def old_files(paths):
     for p in map(Path, paths):
+        if not p.exists():
+            sys.exit(f"similarity: {p} does not exist")
         yield from ([p] if p.is_file() else sorted(p.rglob("*.md")))
 
 

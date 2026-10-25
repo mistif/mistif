@@ -94,7 +94,7 @@ describe('the band: its own level buttons and numbers', () => {
     await start($)
     const ui = await mount($)
     await ui.press({ key: 'level-ultra' })
-    expect(ran).toEqual(['lean ultra'])
+    expect(ran).toEqual(['mistif:lean ultra'])
   })
 
   test('Review and Audit go to mistif:review, never to another plugin', async ($, on) => {

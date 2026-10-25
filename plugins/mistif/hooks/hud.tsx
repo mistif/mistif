@@ -203,9 +203,9 @@ export async function hudSessionMode($: any, e: any, next: any) {
     $.ui.invalidate('ui.render')
   }
   const press: Record<string, () => unknown> = {
-    auto: run('hud', 'auto'),
+    auto: run('mistif:hud', 'auto'),
     settings: async () => { await loadCfg($); settingsCard = null; settingsOpen = true; $.ui.invalidate('ui.render') },
-    handoff: run('hud', 'handoff'),
+    handoff: run('mistif:hud', 'handoff'),
   }
   const items = footerItems({ auto, pick, app, cache, model, paused, judging, switched, advice, saving, compacting, modes })
   return (
@@ -337,7 +337,7 @@ export async function hudAbovePrompt($: any, e: any, next: any) {
             key={`level-${l}`}
             label={l}
             {...(l === level ? { variant: 'primary' as const } : { plain: true as const, dimColor: true })}
-            onPress={run('lean', l)}
+            onPress={run('mistif:lean', l)}
           />
         ))}
         {hot ? <Text color={EMBER} bold>  ✦ running hot</Text> : null}
