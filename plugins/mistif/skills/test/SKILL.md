@@ -44,6 +44,7 @@ Load the row that fits; two references at most.
 7. No assertions on prose wording, constants or script text. Test what depends on them.
 8. Leave nothing skipped, `only`-marked or unawaited.
 9. One case per distinct behaviour. Inputs that exercise the same branch (fifteen spellings of one format) are one case, or one table row. A suite of a dozen sharp tests beats sixty.
+10. Text and parsing code: also cover empty input, repeated whitespace (double spaces, tabs, newlines), unicode and mixed case. Each takes a branch that one plain example never reaches.
 
 ## Prove it can fail
 
