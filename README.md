@@ -57,21 +57,21 @@ Update later with `/mistif:update`, or by hand with `/plugin marketplace update 
 
 ## What we measured
 
-Small blind tests with LLM judges: a few tasks, usually 2 runs per cell, scores 1 to 5. Read them as hints, not proof. A gap under about 0.4 is noise. The reports are in [evals/](evals/README.md); the raw runs are not included.
+**Short version: on everyday coding work, mistif did not measurably beat plain Claude, and its skills cost extra tokens when they load.** Read this before you decide to use it.
 
-Gains:
+All tests were small blind runs (2 to 4 runs per cell; a gap under about 0.4 on a 1 to 5 score, or 25 points of pass rate, is noise). The reports are in [evals/](evals/README.md); raw runs are not included.
 
-- Phase 1 (Haiku, Sonnet and Opus; an earlier build, before 1.0.19): skills vs no skills **+0.33** (95% interval +0.16 to +0.50). Opus gained most (+0.53), Sonnet +0.32; Haiku's +0.15 is not distinguishable from zero. The gain was in fan-out, prompts and decisions; review, ship, UI and build were small or zero. Opus output was judged by a weaker model (Sonnet), so its numbers are less sure.
-- Lite scored the same as Full (-0.03, interval -0.18 to +0.12) with about 17k fewer tokens per run on average; nearly all of that saving was on Opus (-39k), Sonnet -14k, Haiku about the same.
-- Re-test on fresh briefs (1.0.19, 2 runs per cell): pages built with the design skill scored 1.4 to 1.9 points higher than without it (UI on Haiku, Sonnet and Opus judged by Sonnet; one 3D page on Sonnet), and the lean-agents skill cut subagent fan-out on Haiku in 3 of 4 runs.
+What the tests showed:
 
-Losses and non-results:
+- **Build, bug fix, review, tests (Haiku and Sonnet):** the public benchmark (324 runs) scored mistif 4.47 and plain Haiku 4.51, a tie. A difficulty ladder of 19 tasks, up to a 24-clause feature, 32 hidden mutants and a 14-defect review, found no level where mistif beat the base model: base Haiku and Sonnet already passed nearly everything. Loading a skill added about 12% (Haiku) to 32% (Sonnet) to the cost of a run.
+- **Whole app, idea to ship (a good idea and two bad ones):** no measurable benefit at any stage. The idea-check skills (`decide`, `interview`) loaded in none of 18 mistif sessions, because the idea was presented as already decided. The obvious bad idea was flagged by every condition, plain Haiku included; the subtle one (a town marketplace with a 10% fee) was missed by all of them.
+- **Where it did change the result:** a vague first request such as "build me an app". Plain Sonnet asked before building in 2 of 8 dialogues and mistif-Sonnet in 8 of 8, with a better brief; `/mistif:ask` extends this to Haiku (0 of 8 off, 8 of 8 on). It costs about 30% to 56% more when it fires. Decisions also scored higher (4.62 vs 4.12; one task, 4 runs). The design skill's phone pages had slightly larger text (15 px or more) in the whole-app test.
+- **Where it was worse:** unprompted UI pages in the public benchmark (3.94 vs about 4.6 for the others; partly fixed in 1.0.31, not fully matched), and the design pages' small tap targets.
+- **Earlier, easier tests (before 1.0.19):** skills vs no skills scored +0.33 (95% interval +0.16 to +0.50), mostly from fan-out, prompts and decisions, and mostly on Opus and Sonnet; Haiku's gain was not distinguishable from zero. Models do not load the skills on their own unless pointed at them.
 
-- Phase 1: on Sonnet the design skill made UI pages **worse** than plain Claude (it invented figures and tool descriptions, used 11 px text); that was fixed and re-tested as the gain above. The build skill on Haiku scored about 0.3 **below** no skill, and the re-test could not separate them. The entry skill alone (without the role skills visible) reached the intended skill in only 2 of 20 runs and scored about the same as no skills.
-- Re-test: build and review were within noise, and a vague request did not reach the interview skill at all (0 of 8 runs).
-- Interview, with a simulated user: when the prompt tells the model to use its skills, the shipped design asked before building in 16 of 16 runs (Haiku and Sonnet); plain Claude built straight away in 14 of 14. Without that nudge, Haiku never asked (0 of 8) and Sonnet asked in 5 of 8 (loading the interview skill in 3). If the brief says nobody can answer, the model builds anyway. So the interview helps when the model is pointed at its skills, not on its own.
+What that means: treat the skills as optional. The parts with evidence are the vague-request question (`/mistif:ask`) and decisions; the mods (`/mistif:update`, the HUD, the effort mod) are tools, not quality boosters.
 
-Not measured: long real projects, any model other than Haiku, Sonnet and Opus, or the effect of the mods on cost over real use.
+Not measured: very large or unverifiable work, long real projects, `lean-agents` (no test run tempted any model to fan out), any model other than Haiku, Sonnet and Opus, or the mods' effect on cost over real use.
 
 ## Credits and licence
 
