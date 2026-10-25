@@ -158,14 +158,14 @@ describe('Lite usage', () => {
   const sectionsOf = async ($: Engine) => (await $.prompt.compose(input)).sections
 
   test('Full (the default) adds nothing to the system prompt', async ($, on) => {
-    engine(on, { MISTIF_NUDGE: 'off' })
+    engine(on, { MISTIF_ASK: 'off' })
     on('prompt.compose', () => base)
     await $.session.start({ cwd: '.', surface: 'desktop', isInteractive: true } as never)
     expect((await sectionsOf($)).map(s => s.id)).toEqual(['intro'])
   })
 
   test('Lite adds one short session section at the end, and only that', { options: { usage: 'lite' } }, async ($, on) => {
-    engine(on, { MISTIF_NUDGE: 'off' })
+    engine(on, { MISTIF_ASK: 'off' })
     on('prompt.compose', () => base)
     await $.session.start({ cwd: '.', surface: 'desktop', isInteractive: true } as never)
     const sections = await sectionsOf($)

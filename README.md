@@ -31,7 +31,7 @@ Update later with `/mistif:update`, or by hand with `/plugin marketplace update 
 | `mistif:lean-agents` | decide whether to spawn subagents at all, how to brief them, and print a cost estimate first (default: inline or one agent) |
 | `mistif:which-tool` | recommend which installed skill, plugin or command fits what you are doing |
 
-**Commands:** `/mistif:spec`, `/mistif:plan`, `/mistif:code-simplify`, `/mistif:credits`, `/mistif:hud`, `/mistif:lean`, `/mistif:nudge`, `/mistif:update`.
+**Commands:** `/mistif:spec`, `/mistif:plan`, `/mistif:code-simplify`, `/mistif:credits`, `/mistif:hud`, `/mistif:lean`, `/mistif:ask`, `/mistif:update`.
 
 **Mods** (hooks that run inside Claude Code):
 
@@ -40,7 +40,7 @@ Update later with `/mistif:update`, or by hand with `/plugin marketplace update 
 - **explain**: when you type a `/command`, a short plain-words note about what it does appears above the prompt.
 - **agents-pane**: `/agents-pane` lists running subagents.
 - **lean mode**: `/mistif:lean off|lite|full|ultra` adds a short section to the system prompt that asks for the smallest complete change, reuse before writing, and a short reply that says what was skipped. Off by default.
-- **nudge**: `/mistif:nudge off|on` adds one short line to the system prompt asking Claude to check whether a mistif skill fits before software work and load it. Models rarely load a skill on their own. Off by default: with it, Haiku loaded a mistif skill in 24 of 28 runs (0 of 28 without), but on an easy suite it added about 50% to the cost per run with no measured quality gain, so turn it on with `/mistif:nudge on` if you want the skills used on harder work (see [evals/](evals/README.md)). `MISTIF_NUDGE=off|on` in the environment overrides the saved choice.
+- **ask**: `/mistif:ask off|auto|on` (default auto). A local check, with no model call, on the first prompt of a session: if it asks to build something, names no file, path or code, and is under 60 words, one short rule is attached to that prompt telling Claude to ask before building (measured: Haiku and Sonnet asked first in 8 of 8 vague dialogues, at about +30% to +55% cost, and clear briefs got no questions). It exists because the benchmark showed skills changed the outcome only on vague requests; it costs more tokens when it fires, and it is silent for everything else. auto is off in headless runs; `MISTIF_ASK=on|off|auto` in the environment overrides the saved choice.
 - **update**: `/mistif:update` refreshes the marketplace and updates mistif to the latest version (then restart Claude Code); `/mistif:update check` only says whether a newer version exists. It runs `claude plugin marketplace update` and `claude plugin update` for you, and prints those two commands if `claude` cannot be run.
 
 **Usage: Lite.** A plugin option (`usage`, default `full`). With `lite`, one short line is added to the system prompt so the skills take their short path: inline or one agent, no peer review, short outputs.

@@ -16,7 +16,7 @@ function engine(on: On, reads: string[] = []) {
     return { value: undefined } as never
   })
   mock.clock(on)
-  mock.env(on, { HOME: '/home/user', MISTIF_NUDGE: 'off' })
+  mock.env(on, { HOME: '/home/user', MISTIF_ASK: 'off' })
   on('session.usage', () => ({ value: USAGE }) as never)
   on('fs.read', (_$, e) => { reads.push(String(e.path)); return { value: '' } as never })
   on('fs.write', () => ({ value: undefined }) as never)

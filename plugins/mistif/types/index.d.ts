@@ -89,8 +89,10 @@ declare module 'claude-code' {
       note: string | null
       /** Lean mode: how hard it pushes for the smallest change. */
       leanLevel: 'off' | 'lite' | 'full' | 'ultra'
-      /** Nudge: whether the session asks Claude to check the mistif skills first. */
-      nudgeLevel: 'off' | 'on'
+      /** Ask-first: whether a vague first build request gets the ask-before-building rule. */
+      askLevel: 'off' | 'auto' | 'on'
+      /** Ask-first: this session's first-prompt check. */
+      askRun: { interactive: boolean; prompts: number }
       /** The subagents the agents pane lists (the newest 8). */
       agentRows: Row[]
     }

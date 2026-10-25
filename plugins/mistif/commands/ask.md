@@ -1,6 +1,6 @@
 ---
-description: Skill nudge, off by default; on or off
-argument-hint: off | on
+description: Ask first on vague build requests. off|auto|on
+argument-hint: off | auto | on
 ---
 
 The mistif mod answers this command itself, so this text is only read when the mod did not load.
