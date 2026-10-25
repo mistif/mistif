@@ -20,8 +20,11 @@ jobs:
         run: |
           claude plugin validate . --strict
           for p in plugins/*/; do claude plugin validate "$p" --strict; done
-      - name: Run the mistif hook tests (hud, effort, explain, lean and agents)
-        # one retry: the cache-countdown test is time-sensitive and can time out on a busy runner
+      - name: Run the mistif hook tests (hud, effort, explain, lean, agents)
+        # one retry in case a slow runner times a test out
         run: |
           export CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1
           claude plugin test plugins/mistif || claude plugin test plugins/mistif
+      - name: Run the Python tests (scripts, explain, guard)
+        working-directory: plugins/mistif
+        run: python -m unittest tests.similarity_test tests.explain_script_test tests.guard_test
