@@ -16,3 +16,4 @@
 - `explain.test.ts`: the note above the prompt (saved line, model asked once, cleared by plain text, unknown name). `explain_script_test.py` tests `explain.py` against a made-up home folder (worktrees, unregistered `local-marketplaces` folders, stale cache versions, switched-off plugins, lookup order); run it with `python -m unittest tests/explain_script_test.py`, since a test file here cannot start a process.
 - `agents.test.ts`: the agents pane opens with the first running subagent, lists it, and closes a while after the last one ends.
 - Timing: no test waits on real time. The cache countdown tests move the mocked clock, and keep the jumps short because every simulated minute runs the mod's 15 s timers.
+- `update.test.ts`: `/mistif:update` and `check`: already latest, updated, `claude` missing, a failing command, newer / not newer (compared as numbers); process.run and the file reads are stubbed, the real update is never run.

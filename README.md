@@ -11,7 +11,7 @@ In Claude Code:
 /plugin install mistif@mistif
 ```
 
-Update later with `/plugin marketplace update mistif`, then `/plugin update mistif@mistif`. The skills and commands work in any Claude Code that supports plugins. The mods (below) use Claude Code's mod API; if your build does not load them, the skills and commands still work.
+Update later with `/mistif:update`, or by hand with `/plugin marketplace update mistif`, then `/plugin update mistif@mistif`. The skills and commands work in any Claude Code that supports plugins. The mods (below) use Claude Code's mod API; if your build does not load them, the skills and commands still work.
 
 ## What is in it
 
@@ -31,7 +31,7 @@ Update later with `/plugin marketplace update mistif`, then `/plugin update mist
 | `mistif:lean-agents` | decide whether to spawn subagents at all, how to brief them, and print a cost estimate first (default: inline or one agent) |
 | `mistif:which-tool` | recommend which installed skill, plugin or command fits what you are doing |
 
-**Commands:** `/mistif:spec`, `/mistif:plan`, `/mistif:code-simplify`, `/mistif:credits`, `/mistif:hud`, `/mistif:lean`, `/mistif:nudge`.
+**Commands:** `/mistif:spec`, `/mistif:plan`, `/mistif:code-simplify`, `/mistif:credits`, `/mistif:hud`, `/mistif:lean`, `/mistif:nudge`, `/mistif:update`.
 
 **Mods** (hooks that run inside Claude Code):
 
@@ -41,6 +41,7 @@ Update later with `/plugin marketplace update mistif`, then `/plugin update mist
 - **agents-pane**: `/agents-pane` lists running subagents.
 - **lean mode**: `/mistif:lean off|lite|full|ultra` adds a short section to the system prompt that asks for the smallest complete change, reuse before writing, and a short reply that says what was skipped. Off by default.
 - **nudge**: `/mistif:nudge off|on` adds one short line to the system prompt asking Claude to check whether a mistif skill fits before software work and load it. Models rarely load a skill on their own. On by default (Haiku loaded a mistif skill in 16 of 16 runs with it and 0 of 16 without, see [evals/](evals/README.md)); `MISTIF_NUDGE=off|on` in the environment overrides the saved choice.
+- **update**: `/mistif:update` refreshes the marketplace and updates mistif to the latest version (then restart Claude Code); `/mistif:update check` only says whether a newer version exists. It runs `claude plugin marketplace update` and `claude plugin update` for you, and prints those two commands if `claude` cannot be run.
 
 **Usage: Lite.** A plugin option (`usage`, default `full`). With `lite`, one short line is added to the system prompt so the skills take their short path: inline or one agent, no peer review, short outputs.
 
@@ -52,6 +53,7 @@ Update later with `/plugin marketplace update mistif`, then `/plugin update mist
 - The settings card edits your Claude Code `settings.json` (plugin options only) and writes a backup next to it first.
 - The which-tool skill can show how often you used each skill. That reads your session files under `~/.claude/projects` and caches counts in `~/.claude/mistif-usage.json`. It is **off** unless you set the environment variable `MISTIF_USAGE=1`.
 - Apart from those model calls, which go through your own Claude Code login, nothing is sent anywhere, and there is no telemetry.
+- `/mistif:update` runs the normal plugin update commands when you type it; nothing runs on its own.
 
 ## What we measured
 

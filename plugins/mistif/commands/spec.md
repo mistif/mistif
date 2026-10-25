@@ -1,5 +1,5 @@
 ---
-description: Start spec-driven development — write a structured specification before writing code
+description: Write a structured spec before writing code
 ---
 
 Invoke the mistif:interview skill in spec mode. If the request is still vague, it starts with clarify mode.
