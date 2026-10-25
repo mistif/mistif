@@ -1,10 +1,10 @@
 {
   "name": "mistif",
-  "description": "Claude Code kit in one plugin: workflow skills (interview, build, test, review, ship, design, decide, prompt), and the hud, effort, explain, lean and agents-pane mods",
+  "description": "Claude Code kit in one plugin: workflow skills (interview, build, test, review, ship, design, decide, prompt), and the hud, effort, explain, lean, nudge and agents-pane mods",
   "author": {
     "name": "mistif"
   },
-  "version": "1.0.27",
+  "version": "1.0.29",
   "types": "./types/index.d.ts",
   "userConfig": {
     "handoffSkill": {
@@ -71,6 +71,16 @@
       "options": [
         "full",
         "lite"
+      ]
+    },
+    "contextCheck": {
+      "type": "string",
+      "title": "Context check",
+      "description": "on: once a chat passes about 30% of its context, a few recent messages go to Haiku to suggest a fresh chat. off: that call is never made.",
+      "default": "on",
+      "options": [
+        "on",
+        "off"
       ]
     },
     "hide": {

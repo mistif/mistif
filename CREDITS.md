@@ -17,6 +17,7 @@ Everything not listed below was written for mistif and is MIT-licensed, see `LIC
 | What in mistif | Made by | Licence | What we did |
 |---|---|---|---|
 | `/mistif:lean` and `plugins/mistif/hooks/lean.tsx` (lean mode: levels off, lite, full, ultra) | ponytail by Dietrich Gebert, https://github.com/DietrichGebert/ponytail | MIT | Follows ponytail's structure and ideas, reworded: levels, the order of preferences (leave it out, reuse, built-ins, installed packages, one line, then new code), finishing the whole job, never cutting checks at trust boundaries, a shortcut comment, and a closing note on what was skipped. The wording was written again (shared runs of 8 or more words with ponytail's files: none, checked with `scripts/similarity.py`, which does not catch paraphrase). No code copied. Nobody needs ponytail installed. |
+| `/mistif:nudge` and `plugins/mistif/hooks/nudge.tsx` (one line in the system prompt asking Claude to check the mistif skills first) | superpowers by Jesse Vincent, https://github.com/obra/superpowers | MIT | Inspired by superpowers' session-start hook. The idea only; the wording and code are ours. |
 | `mistif:decide` (`plugins/mistif/skills/decide`) | Court of Claude by Alex Chen (alexyc9381), https://github.com/alexyc9381/court-skill | MIT (checked on GitHub, 2026-10-25) | Inspiration only: the idea of putting a decision through a structured, multi-viewpoint review that ends in a clear verdict. The skill was written from scratch; no text or code of Court of Claude is in mistif. |
 
 ## Named, not copied

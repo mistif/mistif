@@ -251,6 +251,8 @@ export type JudgeConfig = {
   hide: Hideable[]
   /** Full adds nothing; Lite adds LITE_LINE to the system prompt so the skills take their short path. */
   usage: 'full' | 'lite'
+  /** On (the default): past about 30% of the context a small model reads a few messages to suggest a fresh chat. Off: no such call. */
+  contextCheck: boolean
 }
 
 /** The one line Lite adds. Skills look for the words "Lite usage". */
@@ -272,6 +274,7 @@ let config: JudgeConfig = {
   ceiling: 'max',
   hide: ['reason'],
   usage: 'full',
+  contextCheck: true,
 }
 
 /** The settings as the engine hands them over (defaults filled in), cleaned to the shape the judge reads. */
@@ -290,6 +293,7 @@ export function readConfig(options: unknown): JudgeConfig {
       .map(part => part.trim())
       .filter((part): part is Hideable => (HIDEABLE as readonly string[]).includes(part)),
     usage: str(o.usage) === 'lite' ? 'lite' : 'full',
+    contextCheck: str(o.contextCheck) !== 'off',
   }
 }
 
@@ -366,6 +370,7 @@ export function parseHandoffAnswer(text: string): string | null {
 let promptsSinceHandoffCheck = 0
 /** Called with each message the person sends. Sets or clears the advice; never throws, never holds the message. */
 async function checkHandoff($: EngineInterface, next: string) {
+  if (!config.contextCheck) return
   const percent = lastContext?.percent ?? 0
   if (percent < HANDOFF_CHECK_FROM) {
     promptsSinceHandoffCheck = 0

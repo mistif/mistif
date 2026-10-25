@@ -49,6 +49,7 @@ const FIELDS = [
   { key: 'effortBias', label: 'Lean (cheaper to smarter)', values: ['-2', '-1', '0', '1', '2'] },
   { key: 'handoffAfter', label: 'After handoff', values: ['continue', 'confirm', 'copy'] },
   { key: 'usage', label: 'Usage', values: ['full', 'lite'] },
+  { key: 'contextCheck', label: 'Context check', values: ['on', 'off'] },
 ]
 const HINTS: Record<string, string> = {
   effortFloor: 'lowest effort mistif will pick',
@@ -56,6 +57,7 @@ const HINTS: Record<string, string> = {
   effortBias: 'nudge every choice: -2 cheapest, 2 smartest',
   handoffAfter: 'what happens once a handoff is written',
   usage: 'lite adds one short line to the system prompt: cheap defaults',
+  contextCheck: 'off: past 30% of context, no recent messages go to Haiku',
 }
 const AFTER: Record<string, string> = {
   continue: 'asks, then clears',
@@ -66,7 +68,7 @@ const USAGE: Record<string, string> = {
   full: 'nothing added, every skill at full depth',
   lite: 'inline or one agent, no peer review, short outputs',
 }
-const DEFAULTS: Record<string, string> = { effortFloor: 'medium', effortCeiling: 'max', effortBias: '0', handoffAfter: 'continue', usage: 'full' }
+const DEFAULTS: Record<string, string> = { effortFloor: 'medium', effortCeiling: 'max', effortBias: '0', handoffAfter: 'continue', usage: 'full', contextCheck: 'on' }
 let settingsOpen = false
 let settingsCard: 'effort' | 'handoff' | 'usage' | null = null
 let draft: Record<string, string> = { ...DEFAULTS }
@@ -277,7 +279,7 @@ export async function hudAbovePrompt($: any, e: any, next: any) {
     const open = (to: typeof settingsCard) => () => { settingsCard = to; $.ui.invalidate('ui.render') }
     const PARTS = [
       { id: 'effort' as const, title: 'Effort', about: 'How hard Claude thinks. Auto stays between the floor and the ceiling.', keys: ['effortFloor', 'effortCeiling', 'effortBias'], summary: `${draft.effortFloor} to ${draft.effortCeiling} · ${leanWord}` },
-      { id: 'handoff' as const, title: 'Handoff', about: 'What happens once a handoff is written.', keys: ['handoffAfter'], summary: AFTER[draft.handoffAfter] },
+      { id: 'handoff' as const, title: 'Handoff', about: 'What happens once a handoff is written, and whether a few recent messages go to Haiku past 30% of context to suggest a fresh chat.', keys: ['handoffAfter', 'contextCheck'], summary: `${AFTER[draft.handoffAfter]} · check ${draft.contextCheck}` },
       { id: 'usage' as const, title: 'Usage', about: 'Full runs every skill in depth. Lite adds one short line so Claude works inline, skips peer review and keeps answers short.', keys: ['usage'], summary: `${draft.usage} · ${USAGE[draft.usage] ?? USAGE.full}` },
     ]
     const part = PARTS.find(x => x.id === settingsCard)

@@ -18,3 +18,4 @@ How to read them:
 | `runs/2026-10-25-phase1/REPORT.md` | skills vs no skills across Haiku, Sonnet and Opus; Full vs Lite usage |
 | `runs/2026-10-25-retest/REPORT.md` | re-test of the Phase 1 fixes on fresh briefs |
 | `runs/2026-10-25-interview/REPORT.md` | the interview skill with a simulated user, four designs |
+| `runs/2026-10-25-nudge/REPORT.md` | Haiku loading mistif skills unprompted, nudge on vs off |

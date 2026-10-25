@@ -21,17 +21,17 @@ Update later with `/plugin marketplace update mistif`, then `/plugin update mist
 |---|---|
 | `mistif:mistif` | pick the next step of a software task (clarify, plan, build, review, ship, design, decide) and the cheapest way to do it |
 | `mistif:interview` | ask a few questions one at a time when a request does not say what to build, for whom, or what done means, then save a short brief |
-| `mistif:build` | plan, write, test, repair or tidy code, or check a framework's current docs |
+| `mistif:build` | plan, write, test, repair or tidy code (machine-flavoured comments too), or check a framework's current docs |
 | `mistif:test` | write or repair tests, prove they can fail, run them |
 | `mistif:review` | review a diff or PR, check security, find why something is slow, verify UI in a real browser (read-only unless asked) |
 | `mistif:ship` | go/no-go before release, CI/CD, logging and alerts, retiring something, git workflow (never pushes or deploys without a yes) |
-| `mistif:design` | build or restyle UI and interface text, phone layouts, usability, cleaning machine-flavoured comments |
+| `mistif:design` | build or restyle UI and interface text, phone layouts, usability |
 | `mistif:decide` | stress-test a real decision with several lenses; ends GO, TEST FIRST or NO-GO plus the cheapest test |
 | `mistif:prompt` | write one ready-to-paste prompt for a named AI tool |
 | `mistif:lean-agents` | decide whether to spawn subagents at all, how to brief them, and print a cost estimate first (default: inline or one agent) |
 | `mistif:which-tool` | recommend which installed skill, plugin or command fits what you are doing |
 
-**Commands:** `/mistif:spec`, `/mistif:plan`, `/mistif:code-simplify`, `/mistif:credits`, `/mistif:hud`, `/mistif:lean`.
+**Commands:** `/mistif:spec`, `/mistif:plan`, `/mistif:code-simplify`, `/mistif:credits`, `/mistif:hud`, `/mistif:lean`, `/mistif:nudge`.
 
 **Mods** (hooks that run inside Claude Code):
 
@@ -40,12 +40,13 @@ Update later with `/plugin marketplace update mistif`, then `/plugin update mist
 - **explain**: when you type a `/command`, a short plain-words note about what it does appears above the prompt.
 - **agents-pane**: `/agents-pane` lists running subagents.
 - **lean mode**: `/mistif:lean off|lite|full|ultra` adds a short section to the system prompt that asks for the smallest complete change, reuse before writing, and a short reply that says what was skipped. Off by default.
+- **nudge**: `/mistif:nudge off|on` adds one short line to the system prompt asking Claude to check whether a mistif skill fits before software work and load it. Models rarely load a skill on their own. On by default (Haiku loaded a mistif skill in 16 of 16 runs with it and 0 of 16 without, see [evals/](evals/README.md)); `MISTIF_NUDGE=off|on` in the environment overrides the saved choice.
 
 **Usage: Lite.** A plugin option (`usage`, default `full`). With `lite`, one short line is added to the system prompt so the skills take their short path: inline or one agent, no peer review, short outputs.
 
 ### What the mods read, write and call
 
-- **Effort** sends text to a small model (Haiku) in two ways. On every prompt you type (unless Auto is off: the ⏻ button in the hud, or `/mistif:hud auto`) it sends that prompt and a few recent messages so the judge can pick an effort. Separately, once the chat passes about 30% of its context it also checks whether a fresh chat would serve better, sending your first message, up to seven earlier messages (160 characters each), the tail of the last reply and your next message. That check has no switch.
+- **Effort** sends text to a small model (Haiku) in two ways. On every prompt you type (unless Auto is off: the ⏻ button in the hud, or `/mistif:hud auto`) it sends that prompt and a few recent messages so the judge can pick an effort. Separately, once the chat passes about 30% of its context it also checks whether a fresh chat would serve better, sending your first message, up to seven earlier messages (160 characters each), the tail of the last reply and your next message. Set the plugin option `contextCheck` to `off` (or use the Handoff card in the settings) and that check is never made.
 - **Handoff**: a quick handoff on a chat whose cache has gone cold sends the whole chat (tool output shortened) to Haiku to write the summary. Choose a Full handoff with your own skill (the `handoffSkill` option) to avoid that; there is no other switch.
 - **Explain** sends the name and description of a `/command` you type to Haiku to get a plain-words line.
 - The settings card edits your Claude Code `settings.json` (plugin options only) and writes a backup next to it first.

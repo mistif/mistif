@@ -60,7 +60,7 @@ describe('defaults', () => {
   })
 
   test('the defaults: the chat compacts itself, effort never drops below medium, the handoff asks first', () => {
-    expect(readConfig(undefined)).toEqual({ handoffSkill: '', handoffAfter: 'continue', bias: 0, floor: 'medium', ceiling: 'max', hide: ['reason'], usage: 'full' })
+    expect(readConfig(undefined)).toEqual({ handoffSkill: '', handoffAfter: 'continue', bias: 0, floor: 'medium', ceiling: 'max', hide: ['reason'], usage: 'full', contextCheck: true })
     expect(readConfig({ hide: '' }).hide).toEqual([])
     expect(readConfig({ hide: 'timer, hot, line' }).hide).toEqual(['timer', 'line'])
   })
@@ -68,6 +68,11 @@ describe('defaults', () => {
   test('usage is full unless it says lite exactly', () => {
     expect(readConfig({ usage: 'lite' }).usage).toBe('lite')
     for (const u of [undefined, '', 'Lite', 'low', 'full']) expect(readConfig({ usage: u }).usage).toBe('full')
+  })
+
+  test('the context check is on unless it says off exactly', () => {
+    expect(readConfig({ contextCheck: 'off' }).contextCheck).toBe(false)
+    for (const v of [undefined, '', 'on', 'Off', 'no']) expect(readConfig({ contextCheck: v }).contextCheck).toBe(true)
   })
 
   test('settings of features that are gone change nothing', () => {
@@ -121,20 +126,48 @@ describe('short messages, in the way you write them', () => {
   })
 })
 
+describe('context check', () => {
+  // At 50% of the context, a chat message makes the handoff check ask a small model; contextCheck off makes no such call.
+  async function asked($: Engine, on: On) {
+    engine(on)
+    on('session.usage', () => ({ value: { context: { tokens: 500_000, window: 1_000_000, percent: 50 }, cost: { usd: 0 }, rateLimits: [] } }) as never)
+    const systems: string[] = []
+    on('model.complete', (_$, e) => {
+      systems.push(String(e.system))
+      return { value: { isAnswered: true as const, text: '{"handoff":null}', usage: USAGE } }
+    })
+    await $.session.start({ cwd: '.', surface: 'desktop', isInteractive: true } as never)
+    for (const text of ['now plan the whole architecture', 'and write the migration for it']) {
+      await $.prompt.submit({ text, wait: false, origin: { kind: 'composer' } })
+    }
+    return systems.filter(s => s.includes('hand off now'))
+  }
+
+  test('on by default: past 30% the check asks a model', async ($, on) => {
+    expect((await asked($, on)).length).toBeGreaterThan(0)
+  })
+
+  test('off: no message text is sent for the check', { options: { contextCheck: 'off' } }, async ($, on) => {
+    expect(await asked($, on)).toEqual([])
+  })
+})
+
 describe('Lite usage', () => {
   const base = { sections: [{ id: 'intro', text: 'x', scope: 'shared' as const }] }
   const input = { model: 'claude-opus-5-5', promptModel: 'claude-opus-5-5', surfaces: [], tools: [], outputStyle: null, traits: [] } as never
   const sectionsOf = async ($: Engine) => (await $.prompt.compose(input)).sections
 
   test('Full (the default) adds nothing to the system prompt', async ($, on) => {
-    engine(on)
+    engine(on, { MISTIF_NUDGE: 'off' })
     on('prompt.compose', () => base)
+    await $.session.start({ cwd: '.', surface: 'desktop', isInteractive: true } as never)
     expect((await sectionsOf($)).map(s => s.id)).toEqual(['intro'])
   })
 
   test('Lite adds one short session section at the end, and only that', { options: { usage: 'lite' } }, async ($, on) => {
-    engine(on)
+    engine(on, { MISTIF_NUDGE: 'off' })
     on('prompt.compose', () => base)
+    await $.session.start({ cwd: '.', surface: 'desktop', isInteractive: true } as never)
     const sections = await sectionsOf($)
     expect(sections.map(s => s.id)).toEqual(['intro', 'mistif:usage'])
     expect(sections[1]).toMatchObject({ text: LITE_LINE, scope: 'session' })

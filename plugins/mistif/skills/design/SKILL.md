@@ -1,13 +1,13 @@
 ---
 name: design
-description: Use when building or restyling UI, writing interface or marketing text, fixing a "looks generic" page, handling phone layouts, polishing usability, building components, or cleaning machine-flavoured code comments. Not for backend-only work.
+description: Use when building or restyling UI, writing interface or marketing text, fixing a "looks generic" page, handling phone layouts, polishing usability, or building components. Not for backend-only work.
 ---
 
 # design
 
 **Use only the facts you were given.** Every number, claim, name, feature, price, description and link on the page comes from the brief or the files; a missing fact becomes a labelled placeholder or is left out, never made up (no round figures, invented tool or product blurbs, quotes, customers, badges). Text is at least 12 px and tap targets at least 44 px. Re-read the brief against the page before you finish.
 
-Stops interfaces, text and code from reading as interchangeable machine output. Pick the mode from what the work touches and get on with it; mention it only if the choice is not obvious, in plain words and not as a label. Several can run, in this order.
+Stops interfaces and text from reading as interchangeable machine output. Pick the mode from what the work touches and get on with it; mention it only if the choice is not obvious, in plain words and not as a label. Several can run, in this order.
 
 | Mode | It covers |
 |---|---|
@@ -15,7 +15,6 @@ Stops interfaces, text and code from reading as interchangeable machine output. 
 | layout | behaviour across widths, phone to desktop |
 | copy | any words people will read |
 | human | contrast, keyboard, focus, state feedback, zoom, touch |
-| code | comments and surface style of code |
 | build | new or changed components: structure, state, accessibility, states |
 
 "Make me a page" means visual, with layout and human as checks that are always on, plus build if components get written. Do not quiz the person on how to apply this skill. The only choice is between building with these rules and auditing finished work. An audit is a numbered list of findings ranked by severity (dishonest or broken; an unjustified default; polish). Change nothing until they name the numbers.
@@ -79,15 +78,6 @@ Prevents: boilerplate voice and invented proof.
 - Never show status by colour alone. Error text says what to fix. Text survives 200% zoom. A focused input stays above the on-screen keyboard.
 
 Prevents: excluding people, and accessibility claims nobody checked.
-
-## code
-
-Comments and visible style only. Cleaning must never change behaviour.
-
-- Remove banners, comments that restate the line, step-by-step narration, empty labels, vague to-dos, end markers, emoji, and stiff or shouty phrasing.
-- Keep reasons, constraints, traps, and notes on security, performance or law. One line each, two only if the second adds a fact. No history. One comment per logical block.
-
-Prevents: code that looks pasted from a model.
 
 ## build
 

@@ -5,7 +5,7 @@ description: Use to plan, write, test, repair or tidy code, or to check a framew
 
 # build
 
-**Vague or underspecified request? Load `mistif:mistif` and run its short interview before anything else; build nothing yet.** Unattended (nobody can answer): still build nothing; return a short brief and your stated assumptions.
+**Vague or underspecified request? Load `mistif:interview` first; build nothing until its brief is approved.**
 
 **Small and clear** (one file or function, one obvious change)? Skip the modes below: test, change, run the checks, then reply in a few lines (result, check output, assumptions). The rest of this page is for larger work; read only the section you are in.
 
@@ -31,6 +31,7 @@ Modes chain: plan, then build (with test inside each step); fix whenever somethi
 - "Done" means you saw the command output in this session.
 - Each test earns its place: no duplicate assertions, and no extra behaviour (normalising, defaults) the request did not ask for.
 - Open any report with the result and keep it short: what changed, the check output, what you assumed, what you did not check.
+- Comments: remove banners, narration, comments that restate the line, emoji and vague to-dos; keep one line for a reason, a trap, or a security, performance or legal note. Cleaning never changes behaviour.
 - Agents: follow `mistif:lean-agents`. Inline by default.
 
 ## plan

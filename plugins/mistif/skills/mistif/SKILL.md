@@ -5,13 +5,7 @@ description: Entry point for software work. Use at the start of a task to pick t
 
 # mistif
 
-**Vague request** (it does not say what to build, for whom, or what done means)? Interview first. Build nothing and write no file until the brief is approved:
-1. Ask ONE question per turn, then stop and wait for the answer. At most five questions.
-2. Attach your best-guess default to each, so a short answer works. Never ask what a file in the repo can answer.
-3. Stop when you can write a one-paragraph brief and a short acceptance list ("done means: ...") in the person's own words, with your assumptions marked.
-4. Show them, ask "Right?", and on a yes hand the brief to `mistif:build`.
-
-**Unattended** (nobody can answer): do not build. Return the brief, the acceptance list and your stated assumptions, then stop and say how to continue ("reply with changes, or 'go' to build from this brief"). The long version is `mistif:interview`.
+**Vague request** (it does not say what to build, for whom, or what done means)? Load `mistif:interview` first and build nothing until its brief is approved.
 
 A signpost. Read the request, name the situation, hand over to one skill, and keep the spend visible. Do not narrate this; one or two lines, then go.
 
@@ -19,8 +13,8 @@ A signpost. Read the request, name the situation, hand over to one skill, and ke
 
 | If the request is... | Go to |
 |---|---|
-| vague or a loose idea | the interview above |
-| a spec or written quality bar wanted | `mistif:interview` |
+| vague or a loose idea | `mistif:interview` |
+| a spec or written quality bar wanted | `mistif:interview` (spec, quality bar) |
 | clear but large, or spans several files | `mistif:build` (plan mode) |
 | clear and small, or a plan exists | `mistif:build` (build mode) |
 | tests to write or repair, a bug to reproduce as a test, flaky or slow tests | `mistif:test` |

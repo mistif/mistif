@@ -1,5 +1,5 @@
 ---
-description: mistif tools. /mistif:hud handoff [full] [continue|confirm|copy], auto, save, stats, bench [mine], debug.
+description: "mistif tools: handoff, auto, save, stats, bench, debug"
 argument-hint: handoff [full] [continue|confirm|copy] | auto | save | stats | bench [mine] | debug
 ---
 

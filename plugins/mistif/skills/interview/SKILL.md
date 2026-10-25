@@ -16,7 +16,7 @@ Find out what is wanted before anything is built. Four modes, chosen from the pe
 
 Choose the mode yourself. Only mention it if the choice is not obvious, and then in plain words ("first I'll check what you're after"), never by its label; they can still redirect you. Modes chain: clarify, then shape, then spec. Skip a mode whose result already exists. If a quality-bar file exists, read and obey it; change it only when asked.
 
-In a non-interactive run (CI, a loop, nobody to answer) build nothing: return a short brief with what is missing as stated assumptions, and stop.
+In a non-interactive run (CI, a loop, nobody to answer) build nothing: return the brief, the "done means" list and what is missing as stated assumptions, then stop and say how to continue ("reply with changes, or 'go' to build from this brief").
 
 ## Rules for every mode
 

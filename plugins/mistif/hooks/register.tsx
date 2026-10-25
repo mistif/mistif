@@ -7,21 +7,22 @@ import {
 import { agentsCommand, agentsPane, agentsSessionStart } from './agents'
 import { explain, explainAbovePrompt, explainSessionStart, onEdit } from './explain'
 import { leanCommand, leanPromptCompose, leanSessionStart } from './lean'
+import { nudgeCommand, nudgePromptCompose, nudgeSessionStart } from './nudge'
 import { hudAbovePrompt, hudSessionMode, hudTurnComplete } from './hud'
 
 // The loader takes one hooks module per plugin and refuses an event hooked twice, so the mods (effort, hud, lean,
-// agents, explain) are wired here: where several hook the same event, one hook
+// nudge, agents, explain) are wired here: where several hook the same event, one hook
 // runs them in this order, each one's `next` being the next mod's hook. The hooks themselves are exported from the
 // mods' own files, because the validator only follows functions it can see by name.
 export const register: Register = (on, options) => {
   initEffort(options)
 
   on('session.start', async ($, e, next) =>
-    effortSessionStart($, e, e4 => leanSessionStart($, e4, e5 => agentsSessionStart($, e5, e6 => explainSessionStart($, e6, next)))))
-  on('prompt.compose', async ($, e, next) => effortPromptCompose($, e, e2 => leanPromptCompose($, e2, next)))
+    effortSessionStart($, e, e4 => leanSessionStart($, e4, e5 => nudgeSessionStart($, e5, e6 => agentsSessionStart($, e6, e7 => explainSessionStart($, e7, next))))))
+  on('prompt.compose', async ($, e, next) => effortPromptCompose($, e, e2 => leanPromptCompose($, e2, e3 => nudgePromptCompose($, e3, next))))
   on('classic.SessionStart', effortClassicStart)
   on('turn.complete', async ($, e, next) => effortTurnComplete($, e, e2 => hudTurnComplete($, e2, next)))
-  on('command.run', async ($, e, next) => leanCommand($, e, e2 => agentsCommand($, e2, e3 => effortCommand($, e3, next))))
+  on('command.run', async ($, e, next) => leanCommand($, e, e2 => nudgeCommand($, e2, e3 => agentsCommand($, e3, e4 => effortCommand($, e4, next)))))
   on('prompt.submit', async ($, e, next) =>
     effortSubmit($, e, e2 => explain($, e2, next)))
   on('classic.PostModelSwitch', effortModelSwitch)
