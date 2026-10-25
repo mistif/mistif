@@ -1,0 +1,14 @@
+{
+  "name": "mistif",
+  "owner": {
+    "name": "mistif"
+  },
+  "description": "Claude Code marketplace with one plugin, mistif: workflow skills and mods for cost and effort.",
+  "plugins": [
+    {
+      "name": "mistif",
+      "description": "Claude Code kit in one plugin: workflow skills (/mistif:interview, build, test, review, ship, design, decide, prompt), and the hud, effort and explain mods (/mistif:hud)",
+      "source": "./plugins/mistif"
+    }
+  ]
+}

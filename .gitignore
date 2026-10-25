@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+# written by the taste skill and the Playwright CLI when they run inside this repo
+.taste-skill/
+.playwright-cli/
+# local backups
+*.bak
+*.bak-*
+# secrets and local settings
+.env
+.env.*
+*.pem
+*.key
+settings.local.json
+*.log
+# Claude Code working folders
+.claude/
+.mistif/

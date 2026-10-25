@@ -1,0 +1,83 @@
+{
+  "name": "mistif",
+  "description": "Claude Code kit in one plugin: workflow skills (interview, build, test, review, ship, design, decide, prompt), and the hud, effort, explain, lean and agents-pane mods",
+  "author": {
+    "name": "mistif"
+  },
+  "version": "1.0.24",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "handoffSkill": {
+      "type": "string",
+      "title": "Handoff skill (optional)",
+      "description": "A skill or slash command that writes the Full handoff, e.g. session-handoff. Empty: mistif writes it itself (checks git, saves HANDOFF.md). Quick is always a fast fork with the built-in prompt.",
+      "default": ""
+    },
+    "handoffAfter": {
+      "type": "string",
+      "title": "After a handoff (first choice)",
+      "description": "What the handoff does once it is written. The chat is never cleared without asking: continue and confirm ask first (then clear; confirm waits for you in the new chat); copy keeps the chat and copies the handoff.",
+      "default": "continue",
+      "options": [
+        "continue",
+        "confirm",
+        "copy"
+      ]
+    },
+    "effortBias": {
+      "type": "string",
+      "title": "Effort slider",
+      "description": "-2 cheaper to 2 smarter. Tips the judge's close calls that way; sure calls stay. 0: as the judge says.",
+      "default": "0",
+      "options": [
+        "-2",
+        "-1",
+        "0",
+        "1",
+        "2"
+      ]
+    },
+    "effortFloor": {
+      "type": "string",
+      "title": "Never below",
+      "description": "Auto never picks a lower effort than this.",
+      "default": "medium",
+      "options": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    },
+    "effortCeiling": {
+      "type": "string",
+      "title": "Never above",
+      "description": "Auto never picks a higher effort than this.",
+      "default": "max",
+      "options": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    },
+    "usage": {
+      "type": "string",
+      "title": "Usage",
+      "description": "full: nothing added. lite: one short line in the system prompt (inline or one agent, no peer review, short outputs, no fan-out unless asked) and the skills take their short path.",
+      "default": "full",
+      "options": [
+        "full",
+        "lite"
+      ]
+    },
+    "hide": {
+      "type": "string",
+      "title": "Switched off",
+      "description": "Comma-separated: timer (the cache countdown), reason (the judge's line), line (the effort after each reply on the terminal). the hud mod draws the footer and its own alerts.",
+      "default": "reason"
+    }
+  }
+}

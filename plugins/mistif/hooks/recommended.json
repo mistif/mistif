@@ -1,0 +1,126 @@
+{
+  "superpowers:brainstorming": {
+    "w": 3,
+    "when": "idea is vague or soft, building something new, no design yet, before any creative work"
+  },
+  "superpowers:systematic-debugging": {
+    "w": 3,
+    "when": "stuck, bug, test failing, two things that should agree do not, unexpected behavior"
+  },
+  "superpowers:verification-before-completion": {
+    "w": 3,
+    "when": "about to say it is done, fixed or passing, need evidence before claiming"
+  },
+  "superpowers:subagent-driven-development": {
+    "w": 2,
+    "when": "a plan with independent tasks that can be handed to helpers"
+  },
+  "superpowers:finishing-a-development-branch": {
+    "w": 2,
+    "when": "work is finished and tests pass, decide merge, pull request or cleanup"
+  },
+  "superpowers:receiving-code-review": {
+    "w": 2,
+    "when": "got review feedback and need to decide which to apply"
+  },
+  "frontend-design:frontend-design": {
+    "w": 3,
+    "when": "building screens, pages or components, the interface should not look generic"
+  },
+  "claude-api": {
+    "w": 3,
+    "when": "code uses the Anthropic SDK, Claude models, tool use, prompt caching or agents"
+  },
+  "code-review": {
+    "w": 2,
+    "when": "code works and you want to know what could break it, review the current changes"
+  },
+  "simplify": {
+    "w": 2,
+    "when": "code works but is repetitive or ugly, clean up what changed"
+  },
+  "security-review": {
+    "w": 3,
+    "when": "money, passwords, personal data, login, or anything a stranger can reach"
+  },
+  "mistif:interview": {
+    "w": 2,
+    "when": "the ask is underspecified, build me X without who or why, not sure what I want"
+  },
+  "mistif:decide": {
+    "w": 2,
+    "when": "a real decision with stakes, torn between options, want it stress tested from several angles"
+  },
+  "mistif:lean": {
+    "w": 2,
+    "when": "code is getting over-engineered, want the smallest change that works"
+  },
+  "anthropic-skills:chrome-browser": {
+    "w": 2,
+    "when": "need to click through a website in your real Chrome"
+  },
+  "anthropic-skills:pdf": {
+    "w": 2,
+    "when": "read, make, merge or fill a PDF"
+  },
+  "data:validate-data": {
+    "w": 2,
+    "when": "numbers or analysis may be misleading, results disagree with reality, need to check methodology, bias, leakage or calculation errors before trusting them"
+  },
+  "engineering:system-design": {
+    "w": 2,
+    "when": "choosing an architecture or technology stack, comparing platforms or frameworks, designing how components fit together, unsure which approach to take"
+  },
+  "mistif:ship": {
+    "w": 2,
+    "when": "is it ready to release, commits, branches, versions or merge conflicts, setting up or fixing build and deploy pipelines, logs and alerts, removing or replacing an old system safely, docs and decision records"
+  },
+  "product-management:synthesize-research": {
+    "w": 2,
+    "when": "a pile of notes, interviews, surveys or feedback must be turned into themes, insights and decisions about what to do"
+  },
+  "engineering:incident-response": {
+    "w": 3,
+    "when": "live system broke after a change, need to triage, roll back or mitigate, find the cause and write it up"
+  },
+  "anthropic-skills:xlsx": {
+    "w": 2,
+    "when": "spreadsheet or CSV data is the input or output: read, clean, calculate, restructure or produce tables"
+  },
+  "engineering:documentation": {
+    "w": 2,
+    "when": "need to write READMEs, guides, runbooks or explanations so others can understand, use or operate the thing"
+  },
+  "anthropic-skills:deep-research": {
+    "w": 2,
+    "when": "question needs gathering and comparing many sources, market or topic investigation, then a written synthesized report"
+  },
+  "anthropic-skills:pptx": {
+    "w": 2,
+    "when": "need slides, a pitch or a presentation deck, or any PowerPoint file as input or output"
+  },
+  "mistif:build": {
+    "w": 2,
+    "when": "a written plan or feature exists and it is time to build it in small tested committed steps"
+  },
+  "mistif:test": {
+    "w": 3,
+    "when": "implementing logic or fixing a bug, write the failing test first, correctness matters"
+  },
+  "superpowers:writing-plans": {
+    "w": 3,
+    "when": "design is agreed and several files will change, need a step by step plan with the exact tests and code"
+  },
+  "crash-test-skill:crash-test": {
+    "w": 2,
+    "when": "a business, product or side-project idea needs stress testing before committing: what could kill it and the cheapest test to check each risk"
+  },
+  "claude-code-setup:claude-automation-recommender": {
+    "w": 2,
+    "when": "want suggestions for which hooks, skills, plugins or MCP servers would help this particular project"
+  },
+  "mistif:hud": {
+    "w": 2,
+    "when": "want to keep usage and cost down: sets the reasoning effort per prompt automatically and compacts the chat cheaply"
+  }
+}
