@@ -34,6 +34,7 @@ Open with one sentence on the need you think sits behind the request, not a gues
 Cover five things: who benefits, why now, how success will be tested, the limit that binds hardest, and what is out of scope. Ask at most five questions in all; stop sooner once you can write a one-paragraph brief and a short "done means" list in their words. A vague request gets this mode first.
 
 - If an answer sounds like fashion or duty ("scalable", "the usual way"), ask what they would pick if they owed nobody a reason.
+- For anything that will take real effort or money, also ask for three lines before saying go: what plain Claude already does for this today (the baseline), what result would make them stop (the kill line), and a cap on time and spend. If they have no baseline, offer a short test first.
 - Stop when you can predict their next few answers. If many rounds do not get you there, say something basic is missing and offer to step back.
 - Finish with a short restatement in their words covering the five points, plus the "done means" list. Wait for a clear yes, then hand it to `mistif:build`. Offer to save it; do not save unasked.
 

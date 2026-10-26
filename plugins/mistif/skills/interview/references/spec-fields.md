@@ -18,6 +18,7 @@ Each id gets its own spec file, written in dependency order.
 7. **Boundaries** in three tiers: always do, ask first, never do.
 8. **Done when**: a list of checks that can be run or observed.
 9. **Open questions**: what is still unknown and who decides.
+10. **Baseline, stop line, limits**: what plain Claude already does here, the result that would make you stop, and the most time and money you will spend.
 
 ## Vague to measurable
 | Said | Becomes |
