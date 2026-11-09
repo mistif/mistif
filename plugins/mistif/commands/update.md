@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 description: Update mistif to the latest version
 argument-hint: check
 ---

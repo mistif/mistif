@@ -1,6 +1,6 @@
 ---
 name: lean-agents
-description: Use before spawning a subagent, council, fan-out or parallel review. Decides whether to spawn at all, how to brief one, which model, and prints a one-line cost estimate first. Default is inline or a single agent.
+description: "Use before spawning subagents or parallel reviews: whether to spawn, which model, how to brief, with a cost estimate first."
 ---
 
 # Lean agents

@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Use to get finished work out and keep it healthy - a go/no-go check before release, CI/CD setup, logging and alerts, retiring or migrating something, git workflow and versions, decision records and docs. Never pushes, deploys or deletes without a specific yes.
+description: "Release work and keep it healthy: go/no-go, CI/CD, logging, migrations, git and versions, docs. Never pushes or deploys without a yes."
 ---
 
 # ship

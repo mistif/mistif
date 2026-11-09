@@ -1,6 +1,6 @@
 ---
 name: build
-description: Use to plan, write, test, repair or tidy code, or to check a framework's current docs before using it. Modes - plan, build (also "auto"), test, fix, simplify, ground. Vague requests go to mistif:interview first.
+description: "Plan, write, fix, test or tidy code, or check a framework's current docs first. Modes: plan, build, test, fix, simplify, ground."
 ---
 
 # build

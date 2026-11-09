@@ -1,6 +1,6 @@
 ---
 name: design
-description: Use when building or restyling UI, writing interface or marketing text, fixing a "looks generic" page, handling phone layouts, polishing usability, or building components. Not for backend-only work.
+description: "Build or restyle UI, write interface or marketing text, fix generic-looking pages or phone layouts. Not for backend-only work."
 ---
 
 # design

@@ -1,6 +1,6 @@
 ---
 name: test
-description: Use to write or repair tests in any situation - new feature, bug reproduction, legacy code with no tests, API, CLI, UI, data code, Claude Code mods - or to fix flaky and slow tests. Writes the tests, proves they can fail, runs them, reports.
+description: "Write or repair tests (feature, bug, legacy code, API, CLI, UI, mods) or fix flaky and slow tests. Proves each test can fail."
 ---
 
 # test

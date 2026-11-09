@@ -1,6 +1,6 @@
 ---
 name: interview
-description: Use first whenever the request does not say what to build, for whom, or what done means; also for a spec or a written quality bar. Asks one question at a time, then saves a short result. Not for trivial asks or plain questions.
+description: "Use first when a request does not say what to build, for whom, or what done means. Asks one question at a time, saves a short brief."
 ---
 
 # interview

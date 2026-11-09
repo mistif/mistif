@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 description: Write a structured spec before writing code
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: prompt
-description: Use only when asked to write, fix, improve, shorten, split or adapt a prompt for a named AI tool (an LLM, Claude Code, Cursor, an image or video generator). Returns one ready-to-paste prompt with no blanks. Not for general chat or a mere mention of an AI tool.
+description: "Write or fix a prompt for a named AI tool (an LLM, Claude Code, Cursor, an image or video model). Returns one ready-to-paste prompt."
 ---
 
 # prompt

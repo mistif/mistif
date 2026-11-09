@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 description: Ask first on vague build requests. off|auto|on
 argument-hint: off | auto | on
 ---

@@ -1,6 +1,6 @@
 ---
 name: review
-description: Use to judge work rather than produce it - review a diff, PR or code, check security, get an unanchored second look at a decision, find why something is slow, or verify UI behaviour in a real browser. Read-only unless asked to fix.
+description: "Judge work rather than produce it: a diff or PR, security, slowness, a second look at a decision, or UI in a real browser. Read-only."
 ---
 
 # review

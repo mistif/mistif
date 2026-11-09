@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 description: Show who made what mistif uses, copies or changes
 ---
 

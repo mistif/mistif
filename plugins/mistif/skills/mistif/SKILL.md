@@ -1,6 +1,6 @@
 ---
 name: mistif
-description: Entry point for software work. Use at the start of a task to pick the next step (clarify, plan, build, review, ship, design, decide) and the cheapest way to do it. Not for one-line questions.
+description: "Entry point at the start of software work: picks the next step (clarify, plan, build, review, ship, design, decide). Not for one-liners."
 ---
 
 # mistif

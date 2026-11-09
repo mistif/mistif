@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 description: Simplify code for clarity and maintainability — reduce complexity without changing behavior
 ---
 

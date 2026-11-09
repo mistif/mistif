@@ -1,6 +1,6 @@
 ---
 name: which-tool
-description: Recommends which installed skill, plugin or command fits what the user is trying to do, by searching what is installed. Use when they ask what tool or skill to use or how to approach something, or at the start of substantial work.
+description: "Recommends which installed skill, plugin or command fits the task. Use when asked what tool to use or how to approach something."
 ---
 
 # Which tool when

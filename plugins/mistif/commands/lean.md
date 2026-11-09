@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 description: Lean mode, smallest change. off|lite|full|ultra
 argument-hint: off | lite | full | ultra
 ---

@@ -1,6 +1,6 @@
 ---
 name: decide
-description: Use when asked to weigh up, stress-test or sanity-check a plan or a choice between options, and for a real decision with costly trade-offs and more than one defensible answer. Stress-tests a plan through several lenses; ends GO, TEST FIRST or NO-GO plus the cheapest test. Not for casual questions.
+description: "Stress-test a plan or a choice with costly trade-offs. Ends GO, TEST FIRST or NO-GO with the cheapest test. Not for casual questions."
 ---
 
 # decide
