@@ -1,6 +1,6 @@
 ---
 disable-model-invocation: true
-description: Ask first on vague build requests. off|auto|on
+description: "Ask first on vague builds; route clear review, decision and UI requests to their skill. off|auto|on"
 argument-hint: off | auto | on
 ---
 

@@ -23,3 +23,4 @@ How to read them:
 | `runs/2026-10-25-difficulty-bench/REPORT.md` | a ladder from trivial to extreme tasks on Haiku and Sonnet: no quality crossover; skills only changed vague requests |
 | `runs/2026-10-25-lifecycle-bench/REPORT.md` | a whole app from idea to ship, with a good idea and two bad ones: no measurable benefit at any stage; the idea-check skills never ran |
 | `runs/2026-11-09-ladder7/REPORT.md` | 1.0.36 (shorter descriptions) vs 1.0.35 vs base over 7 levels, 286 runs: same quality, no skill loaded unprompted, per-turn overhead halved |
+| `runs/2026-11-10-round2/REPORT.md` | seven skills sharpened from failures, plus first-prompt routing; on six held-out tasks with no hint: 95% vs 83% for base |

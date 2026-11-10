@@ -31,12 +31,21 @@ In a non-interactive run (CI, a loop, nobody to answer) build nothing: return th
 
 Open with one sentence on the need you think sits behind the request, not a guessed product or feature list, and an honest confidence figure. If it is low, say what is missing. Then ask your one question with its guess. A turn that asks a question carries no summary footer and no coverage line.
 
-Cover five things: who benefits, why now, how success will be tested, the limit that binds hardest, and what is out of scope. Ask at most five questions in all; stop sooner once you can write a one-paragraph brief and a short "done means" list in their words. A vague request gets this mode first.
+Spend questions on the facts that change what gets built, in this order:
 
+1. The core rules and numbers: what it must calculate, allow or refuse, with the real quantities (how many items, people, durations, rates, how often).
+2. Where the data comes from and where it may live: the input format, existing tools or files it must read or replace, and anything that must stay local, private or offline.
+3. Who uses it, on what device, and what they must be able to do (including undo, cancel or correct).
+4. What it must produce or connect to: output format, existing systems, the shape of the result.
+5. What must never happen (overlaps, changes to closed records, data leaving) and what is out.
+
+Each question names its topic in concrete terms ("How long is each appointment, and does it differ by therapist?"), not in process terms ("What is your biggest constraint?"). Do not ask why now, how they will measure success, or about budget unless they raised it; put your guess in the brief as an assumption instead. Ask at most five questions in all; after the fifth answer, stop asking and write the brief with every remaining unknown as a stated assumption. A vague request gets this mode first.
+
+- One question mark per turn. Attach your guess as a statement, then ask the single question.
 - If an answer sounds like fashion or duty ("scalable", "the usual way"), ask what they would pick if they owed nobody a reason.
-- For anything that will take real effort or money, also ask for three lines before saying go: what plain Claude already does for this today (the baseline), what result would make them stop (the kill line), and a cap on time and spend. If they have no baseline, offer a short test first.
+- For a big or costly project, add three lines to the brief as assumptions they can correct: what plain Claude already does for this today (the baseline), what result would make them stop (the kill line), and a cap on time and spend. Ask about them only if a question is left over.
 - Stop when you can predict their next few answers. If many rounds do not get you there, say something basic is missing and offer to step back.
-- Finish with a short restatement in their words covering the five points, plus the "done means" list. Wait for a clear yes, then hand it to `mistif:build`. Offer to save it; do not save unasked.
+- Finish with a short restatement in their words covering the five points, with every number and rule they gave, plus the "done means" list. Wait for a clear yes, then hand it to `mistif:build`. For a small build (one sitting, a few files) that yes also approves the plan: start building without asking again. Offer to save it; do not save unasked.
 
 Prevents: building the conventional thing, silent assumptions, polite false agreement, unstated exclusions.
 

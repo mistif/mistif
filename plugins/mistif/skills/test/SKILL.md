@@ -43,8 +43,9 @@ Load the row that fits; two references at most.
 6. No sleeps, shared state, order dependence, or hidden reliance on clock, locale, timezone or network.
 7. No assertions on prose wording, constants or script text. Test what depends on them.
 8. Leave nothing skipped, `only`-marked or unawaited.
-9. One case per distinct behaviour. Inputs that exercise the same branch (fifteen spellings of one format) are one case, or one table row. A suite of a dozen sharp tests beats sixty.
-10. Text and parsing code: also cover empty input, repeated whitespace (double spaces, tabs, newlines), unicode and mixed case. Each takes a branch that one plain example never reaches.
+9. Cover every promise. Before writing tests, list each rule, format, error and edge the docstring, spec or README states, and give each at least one case; a promise with no test is a gap to report. Inputs that exercise the same branch (fifteen spellings of one format) are one table row, not fifteen tests.
+10. Extremes of each promise: the smallest and largest valid input, just past each limit, zero, negative, and the exact tie of any rounding or ordering rule. A claim of exactness ("no floating point", "exact for any size") needs a case with a value too large for a float to hold exactly.
+11. Text and parsing code: also cover empty input, repeated whitespace (double spaces, tabs, newlines), unicode and mixed case. Each takes a branch that one plain example never reaches.
 
 ## Prove it can fail
 

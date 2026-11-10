@@ -40,7 +40,7 @@ Update later with `/mistif:update`, or by hand with `/plugin marketplace update 
 - **explain**: when you type a `/command`, a short plain-words note about what it does appears above the prompt.
 - **agents-pane**: `/agents-pane` lists running subagents.
 - **lean mode**: `/mistif:lean off|lite|full|ultra` adds a short section to the system prompt that asks for the smallest complete change, reuse before writing, and a short reply that says what was skipped. Off by default.
-- **ask**: `/mistif:ask off|auto|on` (default auto). A local check, with no model call, on the first prompt of a session: if it asks to build something, names no file, path or code, and is under 60 words, one short rule is attached to that prompt telling Claude to ask before building (measured: Haiku and Sonnet asked first in 8 of 8 vague dialogues, at about +30% to +55% cost, and clear briefs got no questions). It exists because the benchmark showed skills changed the outcome only on vague requests; it costs more tokens when it fires, and it is silent for everything else. auto is off in headless runs; `MISTIF_ASK=on|off|auto` in the environment overrides the saved choice.
+- **ask**: `/mistif:ask off|auto|on` (default auto). A local check, with no model call, on the first prompt of a session: if it asks to build something, names no file, path or code, and is under 60 words, one short rule is attached to that prompt telling Claude to ask before building; a clear review, decision or interface request instead gets one line asking Claude to load `mistif:review`, `mistif:decide` or `mistif:design` (measured: Haiku and Sonnet asked first in 8 of 8 vague dialogues, at about +30% to +55% cost, and clear briefs got no questions). It exists because the benchmark showed skills changed the outcome only on vague requests; it costs more tokens when it fires, and it is silent for everything else. auto is off in headless runs; `MISTIF_ASK=on|off|auto` in the environment overrides the saved choice.
 - **update**: `/mistif:update` refreshes the marketplace and updates mistif to the latest version (then restart Claude Code); `/mistif:update check` only says whether a newer version exists. It runs `claude plugin marketplace update` and `claude plugin update` for you, and prints those two commands if `claude` cannot be run.
 
 **Usage: Lite.** A plugin option (`usage`, default `full`). With `lite`, one short line is added to the system prompt so the skills take their short path: inline or one agent, no peer review, short outputs.
@@ -57,11 +57,13 @@ Update later with `/mistif:update`, or by hand with `/plugin marketplace update 
 
 ## What we measured
 
-**Short version: on everyday coding work, mistif did not measurably beat plain Claude, and its skills cost extra tokens when they load.** Read this before you decide to use it.
+**Short version: on clear coding tasks mistif does not beat plain Claude. Since 1.0.37 it does beat it on design, decisions and vague requests, on tasks it was not tuned on, when the skill loads.** Read this before you decide to use it.
 
 All tests were small blind runs (2 to 4 runs per cell; a gap under about 0.4 on a 1 to 5 score, or 25 points of pass rate, is noise). The reports are in [evals/](evals/README.md); raw runs are not included.
 
 What the tests showed:
+
+- **1.0.37, held-out tasks (6 tasks, 5 runs each, no hint, Haiku):** base 83%, sharpened skills 90%, sharpened skills with first-prompt routing 95% of checks passed (fully solved 6, 13 and 21 of 30), at about the same cost per run. By skill, routing vs no routing: design 93 vs 85% (browser-measured), decisions 98 vs 92%, review 94 vs 92% (not shown). On easy coding tasks routing loaded nothing and changed nothing. Vague requests: base asked first 0 of 12 times; mistif 12 of 12, capturing about 3 to 4 of 5 key facts vs 0.2. Routing fired on 2 of 50 real first prompts, and only checks the first prompt; not tested on Sonnet. See [the round-2 report](evals/runs/2026-11-10-round2/REPORT.md).
 
 - **Build, bug fix, review, tests (Haiku and Sonnet):** the public benchmark (324 runs) scored mistif 4.47 and plain Haiku 4.51, a tie. A difficulty ladder of 19 tasks, up to a 24-clause feature, 32 hidden mutants and a 14-defect review, found no level where mistif beat the base model: base Haiku and Sonnet already passed nearly everything. Loading a skill added about 12% (Haiku) to 32% (Sonnet) to the cost of a run.
 - **Whole app, idea to ship (a good idea and two bad ones):** no measurable benefit at any stage. The idea-check skills (`decide`, `interview`) loaded in none of 18 mistif sessions, because the idea was presented as already decided. The obvious bad idea was flagged by every condition, plain Haiku included; the subtle one (a town marketplace with a 10% fee) was missed by all of them.
@@ -69,7 +71,7 @@ What the tests showed:
 - **Where it was worse:** unprompted UI pages in the public benchmark (3.94 vs about 4.6 for the others; partly fixed in 1.0.31, not fully matched), and the design pages' small tap targets.
 - **Earlier, easier tests (before 1.0.19):** skills vs no skills scored +0.33 (95% interval +0.16 to +0.50), mostly from fan-out, prompts and decisions, and mostly on Opus and Sonnet; Haiku's gain was not distinguishable from zero. Models do not load the skills on their own unless pointed at them.
 
-What that means: treat the skills as optional. The parts with evidence are the vague-request question (`/mistif:ask`) and decisions; the mods (`/mistif:update`, the HUD, the effort mod) are tools, not quality boosters.
+What that means: on clear coding work, treat the skills as optional. The parts with evidence are the vague-request question and routing (`/mistif:ask`), design, and decisions; the mods (`/mistif:update`, the HUD, the effort mod) are tools, not quality boosters.
 
 Not measured: very large or unverifiable work, long real projects, `lean-agents` (no test run tempted any model to fan out), any model other than Haiku, Sonnet and Opus, or the mods' effect on cost over real use.
 

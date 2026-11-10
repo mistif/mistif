@@ -6,7 +6,7 @@
 - **No mistif skill loaded in any of the 286 runs.** On clear coding tasks with no hint to use a skill, installing mistif only adds its listing to the prompt.
 - **Cost:** 1.0.36 costs +6% per run on Haiku (1.0.35: +10%). On Sonnet 1.0.36 cost +22%, because Sonnet made more tool calls with mistif installed (5.8 vs 4.2 per run).
 - **Per-turn overhead (measured on the first prompt):** 1.0.35 added 1,167 tokens per turn over base, 1.0.36 adds 610. For comparison, superpowers 6.4.1 adds 2,165 and agent-skills 0.6.13 adds 3,807.
-- **Routing (separate check):** for 10 clear requests, 3 runs each on Haiku, the matching skill loaded 21 of 30 times with 1.0.36, against 11 of 30 with 1.0.35.
+- **Routing (separate check):** for 10 clear requests, 3 runs each on Haiku, the matching skill loaded 21 of 30 times with 1.0.36, against 11 of 30 with 1.0.35. That check gave the model only the Skill tool and 2 turns; with all tools, no skill loaded unprompted in any of the 286 ladder runs (see `2026-11-10-round2`).
 
 ## What changed in 1.0.36
 

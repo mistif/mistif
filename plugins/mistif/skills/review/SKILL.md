@@ -38,6 +38,10 @@ Defects found here go to `mistif:build` (fix mode).
    - Failure hidden: a bare catch or ignored error that still reports success.
    - Secrets and keys in source, and a test that only checks the file exists or has some lines.
    - Repeated work: a query or call per item, a list searched where a set fits.
+   - Counts against their stated limit: compare each `<=`/`<` loop, retry counter and page size with the constant it claims to enforce (3 retries means 3 attempts or 4?).
+   - Comparing secrets, tokens or signatures with `==`/`!=` instead of a constant-time compare, and signatures that leave out the timestamp or nonce (replay).
+   - Shared state across threads or requests: any read-then-write that is not under one lock (check-then-act), and a cache filled after an invalidation it can race with.
+   - Dates and money: month-end and DST arithmetic, float money, and rounding that always goes one way.
 4. **Do not cry wolf.** Before you call something a bug, confirm from the code that it is wrong. Parameterised queries, a documented constant and display-only rounding are fine; list them once under "checked, fine" so the reader knows you looked.
 5. **Size and mix.** A refactor mixed with a behaviour change, or a change too big to hold in your head, gets a proposed split. For dependencies, ask whether it is needed, how big, how maintained, its licence and advisories; for upgrades read the changelog and the lockfile diff.
 6. **Check the author's claims** ("tests pass", "works on mobile") and run tests or the build when that is cheap. List code the change orphaned; ask before removing it.

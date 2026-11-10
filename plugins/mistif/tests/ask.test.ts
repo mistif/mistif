@@ -2,7 +2,7 @@
 import { describe, expect, mock, test } from 'claude-code/testing'
 import type { On } from 'claude-code'
 import type { Engine } from 'claude-code/testing'
-import { ASK_TEXT, isVagueBuild } from '../hooks/ask'
+import { ASK_TEXT, ROUTE_TEXT, isVagueBuild, routeFor } from '../hooks/ask'
 
 const base = { sections: [{ id: 'intro', text: 'x', scope: 'shared' as const }] }
 
@@ -45,6 +45,37 @@ describe('detector', () => {
   test('questions, explanations, fixes and reviews do not', () => {
     for (const t of ['how does a hash map work?', 'explain what a closure is', 'fix the login bug', 'review my pull request', 'what is the best way to build a website?', 'refactor this to be shorter'])
       expect(isVagueBuild(t), t).toBe(false)
+  })
+})
+
+describe('route', () => {
+  test('clear jobs route to one skill', () => {
+    const cases: [string, string][] = [
+      ['Review the latest commit (`git show HEAD`); list the real problems.', 'review'],
+      ['can you do a security review of this PR', 'review'],
+      ['Should we go ahead with the plan in docs/PLAN.md? Give a verdict.', 'decide'],
+      ['is this a good idea: moving billing to a new vendor', 'decide'],
+      ['Restyle the checkout page in index.html so it works on phones', 'design'],
+      ['our dashboard is unusable on mobile, make it accessible', 'design'],
+    ]
+    for (const [t, want] of cases) expect(routeFor(t), t).toBe(want)
+  })
+  test('other work does not route', () => {
+    for (const t of [
+      'Add `Inventory.available(sku)` to store/inventory.py', 'fix the failing test in tests/test_pricing.py', 'write tests for durations.py',
+      'We want to release version 2.1.0 today. Do a go/no-go release check.', 'implement cron.py as described in docs/CRON.md',
+      'fix the login form validation bug in auth.py', 'what does this function do?', 'explain the cache layer',
+    ]) expect(routeFor(t), t).toBe(null)
+  })
+  test('a clear review first prompt gets one route line, headless with MISTIF_ASK=on', async ($, on) => {
+    engine(on, { MISTIF_ASK: 'on' })
+    await start($, false)
+    expect(await say($, 'Review the latest commit in this repository (`git show HEAD`) and list the real problems.')).toEqual([ROUTE_TEXT.review])
+  })
+  test('a vague build gets the ask rule, not a route', async ($, on) => {
+    engine(on, { MISTIF_ASK: 'on' })
+    await start($, false)
+    expect(await say($, 'build me a landing page for my bakery')).toEqual([ASK_TEXT])
   })
 })
 

@@ -36,6 +36,31 @@ export function isVagueBuild(text: string): boolean {
   return BUILD.test(t) || WANT.test(t)
 }
 
+// Routing: the benchmark showed the design, decide and review skills raise scores when loaded but are almost never loaded
+// unprompted. When the first prompt is clearly one of those jobs, one line asks the model to load that skill. Build, test
+// and ship are left alone: loading them showed no gain worth the cost.
+export type Route = 'design' | 'decide' | 'review'
+const REVIEW = /\b(?:review|audit|look over|check)\b[^.?!]{0,60}\b(?:commit|diff|pr|pull request|change|changes|branch|patch|code)\b|\b(?:code|security) review\b/i
+const RELEASE = /\b(?:release|ship|deploy|publish|tag)\b/i
+const DECIDE = /\b(?:should (?:we|i)|go ahead with|worth (?:it|doing)|weigh (?:up|it)|stress[- ]test|sanity[- ]check|pros and cons|is (?:this|it) a good idea|go\/no-go|go or no-go)\b/i
+const UI_THING = /\b(?:page|pages|website|site|landing|ui|ux|interface|layout|screen|dashboard|form|frontend|front-end|css|styles?|component)\b/i
+const UI_VERB = /\b(?:build|make|create|design|redesign|restyle|style|polish|clean up|make over|lay out|rework|usable|accessible|unusable|hard to use)\b/i
+export const ROUTE_TEXT: Record<Route, string> = {
+  design: 'This first request is interface work. Load the mistif:design skill before you start and follow it.',
+  decide: 'This first request asks for a judgement on a plan or choice. Load the mistif:decide skill before you start and follow it.',
+  review: 'This first request asks for a code review. Load the mistif:review skill before you start and follow it.',
+}
+
+/** Which skill a first prompt should load, or null. Review wins over decide; a release check is not a decision. */
+export function routeFor(text: string): Route | null {
+  const t = text.trim()
+  if (t === '' || words(t) >= 400) return null
+  if (REVIEW.test(t)) return 'review'
+  if (DECIDE.test(t) && !RELEASE.test(t)) return 'decide'
+  if (UI_THING.test(t) && UI_VERB.test(t)) return 'design'
+  return null
+}
+
 const asLevel = (v: unknown): AskLevel | undefined => (ASK_LEVELS.includes(v as AskLevel) ? (v as AskLevel) : undefined)
 
 export async function askSessionStart($: any, e: any, next: any) {
@@ -53,19 +78,22 @@ export async function askPromptSubmit($: any, e: any, next: any) {
   const [level, run] = await Promise.all([read($, askLevel), read($, askRun)])
   if (run.prompts > 0) return next(e)
   const applies = level === 'on' || (level === 'auto' && run.interactive)
-  const fires = applies && isVagueBuild(String(e.text ?? ''))
+  const text = String(e.text ?? '')
+  const fires = applies && isVagueBuild(text)
+  const route = applies && !fires ? routeFor(text) : null
   await update($, askRun, (r: AskRun) => ({ ...r, prompts: 1 }))
-  return next(fires ? { ...e, context: [...(e.context ?? []), ASK_TEXT] } : e)
+  const add = fires ? ASK_TEXT : route ? ROUTE_TEXT[route] : null
+  return next(add ? { ...e, context: [...(e.context ?? []), add] } : e)
 }
 
 /** /mistif:ask [off|auto|on]. No argument says where it stands. */
 export async function askCommand($: any, e: any, next: any) {
   if (!['ask', 'mistif:ask'].includes(e.command)) return next(e)
   const arg = e.args.trim().toLowerCase()
-  if (arg === '') return { text: `Ask-first is ${await read($, askLevel)}. Use /mistif:ask off|auto|on. auto: only with a person at the prompt; on: always.` }
+  if (arg === '') return { text: `Ask-first is ${await read($, askLevel)}. Use /mistif:ask off|auto|on. auto: only with a person at the prompt; on: always. It also routes a clear review, decision or interface first prompt to its skill.` }
   const level = asLevel(arg)
   if (!level) return { text: `Unknown level "${arg}". Use off, auto or on.` }
   await Promise.all([update($, askLevel, () => level), $.store.set('askLevel', level)])
   const forced = asLevel(String((await $.env.get('MISTIF_ASK').catch(() => null)) ?? '').trim().toLowerCase())
-  return { text: `Ask-first ${level}: applies to a session's first prompt.${forced ? ` MISTIF_ASK=${forced} is set and wins.` : ''}` }
+  return { text: `Ask-first ${level}: applies to a session's first prompt (ask-first and skill routing).${forced ? ` MISTIF_ASK=${forced} is set and wins.` : ''}` }
 }
