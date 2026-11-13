@@ -67,6 +67,26 @@ describe('route', () => {
       'fix the login form validation bug in auth.py', 'what does this function do?', 'explain the cache layer',
     ]) expect(routeFor(t), t).toBe(null)
   })
+  test('the informal ways people ask', () => {
+    const cases: [string, string][] = [
+      ['the shop ui looks very cheap, clean it up', 'design'],
+      ['fix the spacing in the header, there is a big gap on the right', 'design'],
+      ['no offense it looks bad, make it more polished', 'design'],
+      ['should we use postgres or sqlite for this?', 'decide'],
+      ['is it even worth doing recurring orders', 'decide'],
+      ['if i commit right now will anything be wrong, can u check', 'review'],
+      ['look at my checkout file and tell me any bugs', 'review'],
+    ]
+    for (const [t, want] of cases) expect(routeFor(t), t).toBe(want)
+  })
+  test('casual questions, checks, picked tools and links do not route', () => {
+    for (const t of [
+      'should i restart claude code?', 'okay great so should we push to netlify', 'should we write it into the config file?',
+      'make sure the site runs well after the deploy', 'check if it worked', 'looks good, ship it', 'it looks great',
+      'can u do a /code-review of the diff', 'use /mistif:design on the landing page', 'install frontend-design for me',
+      'https://example.com/page/design/ui/make-it-look-clean',
+    ]) expect(routeFor(t), t).toBe(null)
+  })
   test('a clear review first prompt gets one route line, headless with MISTIF_ASK=on', async ($, on) => {
     engine(on, { MISTIF_ASK: 'on' })
     await start($, false)
@@ -76,6 +96,19 @@ describe('route', () => {
     engine(on, { MISTIF_ASK: 'on' })
     await start($, false)
     expect(await say($, 'build me a landing page for my bakery')).toEqual([ASK_TEXT])
+  })
+  test('only the first prompt routes; later ones add nothing', async ($, on) => {
+    engine(on)
+    await start($)
+    expect(await say($, 'what does this repo do?')).toEqual([])
+    expect(await say($, 'the settings page looks cluttered, clean it up')).toEqual([])
+    await start($)
+    expect(await say($, 'fix the spacing in the header')).toEqual([ROUTE_TEXT.design])
+  })
+  test('routing is off with ask-first off', async ($, on) => {
+    engine(on, { MISTIF_ASK: 'off' })
+    await start($)
+    expect(await say($, 'the settings page looks cluttered, clean it up')).toEqual([])
   })
 })
 

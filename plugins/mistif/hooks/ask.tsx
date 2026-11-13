@@ -38,26 +38,38 @@ export function isVagueBuild(text: string): boolean {
 
 // Routing: the benchmark showed the design, decide and review skills raise scores when loaded but are almost never loaded
 // unprompted. When the first prompt is clearly one of those jobs, one line asks the model to load that skill. Build, test
-// and ship are left alone: loading them showed no gain worth the cost.
+// and ship are left alone: loading them showed no gain worth the cost. Later prompts are not routed: once the model has
+// read the repository, loading the skill showed no gain (evals/runs/2026-11-11-midsession).
 export type Route = 'design' | 'decide' | 'review'
-const REVIEW = /\b(?:review|audit|look over|check)\b[^.?!]{0,60}\b(?:commit|diff|pr|pull request|change|changes|branch|patch|code)\b|\b(?:code|security) review\b/i
-const RELEASE = /\b(?:release|ship|deploy|publish|tag)\b/i
-const DECIDE = /\b(?:should (?:we|i)|go ahead with|worth (?:it|doing)|weigh (?:up|it)|stress[- ]test|sanity[- ]check|pros and cons|is (?:this|it) a good idea|go\/no-go|go or no-go)\b/i
-const UI_THING = /\b(?:page|pages|website|site|landing|ui|ux|interface|layout|screen|dashboard|form|frontend|front-end|css|styles?|component)\b/i
-const UI_VERB = /\b(?:build|make|create|design|redesign|restyle|style|polish|clean up|make over|lay out|rework|usable|accessible|unusable|hard to use)\b/i
+const REVIEW = /\b(?:review|audit|look over|go over|check)\b[^.?!]{0,60}\b(?:commit|diff|pr|pull request|change|changes|branch|patch|code)\b|\b(?:code|security) review\b|\b(?:wrong|break|broken)\b[^.?!]{0,40}\bcheck\b|\b(?:check|look at|look over|go over|read through)\b[^.?!]{0,80}\b(?:issues|bugs|problems|wrong|bloat|vulnerabilit(?:y|ies))\b/i
+const NOT_REVIEW = /\b(?:check|see) (?:if|whether|that) (?:it|this|that|they|everything) (?:worked|works|ran|runs|deployed|is (?:live|up|running))\b|\blive trading\b/i
+const RELEASE = /\b(?:release|ship|deploy|publish|tag|push)\b/i
+const DECIDE = /\b(?:go ahead with|worth (?:it|doing|the)|is (?:it|this|that) (?:even |really )?worth|weigh (?:up|it)|stress[- ]test|sanity[- ]check|pros and cons|trade-?offs?|is (?:this|it) a good idea|better or worse|go\/no-go|go or no-go)\b|\bshould (?:we|i)\b[^.?!]{1,60}\bor\b(?! not\b)/i
+// Interface work: a UI thing plus a build or restyle verb, or a complaint or goal about how something looks.
+const UI_THING = /\b(?:page|pages|website|site|landing|ui|uis|ux|gui|guis|hud|interface|layout|screen|dashboard|form|frontend|front[- ]end|css|html|styles?|styling|component|navbar|nav bar|top bar|header|footer|spacing|padding|font|fonts|colou?rs?|theme)\b/i
+const UI_VERB = /\b(?:build|make(?! sure)|create|design|redesign|restyle|style|polish|clean(?:er)? (?:it |this |them )?up|make over|lay out|rework|redo|tidy|usable|accessible|unusable|hard to use|readable)\b/i
+const LOOKS = /\b(?:looks?|looking)\s+(?:(?:very|so|kinda|really|super|too|more|less|much|a bit|pretty|straight)\s+)*(?:bad|cheap|ugly|off|weird|wrong|generic|cluttered|messy|plain|boring|bland|dated|outdated|amateur|poorly|unprofessional|ai slop|slop|clean|cleaner|polished|sleek|modern|professional|fancy|pretty|nicer)\b|\bmake (?:it|this|them|the \w+) (?:look|more clean|cleaner|prettier|sleeker|nicer|more modern|more polished)\b/i
+// Small visual parts that a plain edit verb is enough for ("fix the spacing", "remove the top bar").
+const STYLE_THING = /\b(?:spacing|padding|margins?|font|fonts|colou?rs?|theme|css|styling|layout|navbar|nav bar|top bar|header|footer|gui|guis|ui|uis)\b/i
+const EDIT_VERB = /\b(?:fix|change|update|adjust|move|remove|resize|shrink|enlarge|bigger|smaller|tweak|improve|work on)\b/i
+const URL = /https?:\/\/\S+/g
 export const ROUTE_TEXT: Record<Route, string> = {
   design: 'This first request is interface work. Load the mistif:design skill before you start and follow it.',
   decide: 'This first request asks for a judgement on a plan or choice. Load the mistif:decide skill before you start and follow it.',
   review: 'This first request asks for a code review. Load the mistif:review skill before you start and follow it.',
 }
 
+// A prompt that already names a slash command or skill has picked its own tool.
+const PICKED = /(?:^|\s)\/[a-z][\w-]*(?::[\w-]+)?\b|\bmistif:[a-z-]+|\b(?:design|review|decide)[- ]skill\b|\bfrontend-design\b/i
+
 /** Which skill a first prompt should load, or null. Review wins over decide; a release check is not a decision. */
 export function routeFor(text: string): Route | null {
   const t = text.trim()
-  if (t === '' || words(t) >= 400) return null
-  if (REVIEW.test(t)) return 'review'
-  if (DECIDE.test(t) && !RELEASE.test(t)) return 'decide'
-  if (UI_THING.test(t) && UI_VERB.test(t)) return 'design'
+  if (t === '' || words(t) >= 400 || PICKED.test(t)) return null
+  const u = t.replace(URL, ' ')
+  if (REVIEW.test(u) && !NOT_REVIEW.test(u)) return 'review'
+  if (DECIDE.test(u) && !RELEASE.test(u)) return 'decide'
+  if ((UI_THING.test(u) && UI_VERB.test(u)) || (STYLE_THING.test(u) && EDIT_VERB.test(u)) || LOOKS.test(u)) return 'design'
   return null
 }
 
