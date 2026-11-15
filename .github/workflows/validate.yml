@@ -27,4 +27,4 @@ jobs:
           claude plugin test plugins/mistif || claude plugin test plugins/mistif
       - name: Run the Python tests (scripts, explain, guard)
         working-directory: plugins/mistif
-        run: python -m unittest tests.similarity_test tests.explain_script_test tests.guard_test
+        run: python -m unittest tests.similarity_test tests.explain_script_test tests.guard_test tests.check_cites_test

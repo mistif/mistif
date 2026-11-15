@@ -27,6 +27,7 @@ Update later with `/mistif:update`, or by hand with `/plugin marketplace update 
 | `mistif:ship` | go/no-go before release, CI/CD, logging and alerts, retiring something, git workflow (never pushes or deploys without a yes) |
 | `mistif:design` | build or restyle UI and interface text, phone layouts, usability |
 | `mistif:decide` | stress-test a real decision with several lenses; ends GO, TEST FIRST or NO-GO plus the cheapest test |
+| `mistif:research` | answer a question from the web with sources it re-opened and checked; says "not found" rather than guess; deep mode for in-depth rundowns |
 | `mistif:prompt` | write one ready-to-paste prompt for a named AI tool |
 | `mistif:lean-agents` | decide whether to spawn subagents at all, how to brief them, and print a cost estimate first (default: inline or one agent) |
 | `mistif:which-tool` | recommend which installed skill, plugin or command fits what you are doing |
@@ -63,6 +64,7 @@ All tests were small blind runs (2 to 4 runs per cell; a gap under about 0.4 on 
 
 What the tests showed:
 
+- **1.0.39, research (18 held-out questions, Haiku):** `mistif:research` against Anthropic's deep-research skill: short questions 100% vs 100% (base 99%), with 95% of facts backed by a cited page (base 88%) and the fewest dead links, at half the cost; in-depth rundowns 90% vs 90% (base 72%) at about 40% of the cost. Small samples, Haiku only. See [the research report](evals/runs/2026-11-15-research/REPORT.md).
 - **1.0.37, held-out tasks (6 tasks, 5 runs each, no hint, Haiku):** base 83%, sharpened skills 90%, sharpened skills with first-prompt routing 95% of checks passed (fully solved 6, 13 and 21 of 30), at about the same cost per run. By skill, routing vs no routing: design 93 vs 85% (browser-measured), decisions 98 vs 92%, review 94 vs 92% (not shown). On easy coding tasks routing loaded nothing and changed nothing. Vague requests: base asked first 0 of 12 times; mistif 12 of 12, capturing about 3 to 4 of 5 key facts vs 0.2. Routing fired on 2 of 50 real first prompts and only checks the first prompt: routing later prompts was tried and dropped, because after a warm-up turn it scored the same as no routing (89% vs 88%) at +22% cost ([report](evals/runs/2026-11-11-midsession/REPORT.md)). Not tested on Sonnet. See [the round-2 report](evals/runs/2026-11-10-round2/REPORT.md).
 
 - **Build, bug fix, review, tests (Haiku and Sonnet):** the public benchmark (324 runs) scored mistif 4.47 and plain Haiku 4.51, a tie. A difficulty ladder of 19 tasks, up to a 24-clause feature, 32 hidden mutants and a 14-defect review, found no level where mistif beat the base model: base Haiku and Sonnet already passed nearly everything. Loading a skill added about 12% (Haiku) to 32% (Sonnet) to the cost of a run.

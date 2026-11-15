@@ -51,6 +51,10 @@
     "w": 2,
     "when": "a real decision with stakes, torn between options, want it stress tested from several angles"
   },
+  "mistif:research": {
+    "w": 2,
+    "when": "look something up on the web, research a topic, need sources or citations, an in-depth rundown"
+  },
   "mistif:lean": {
     "w": 2,
     "when": "code is getting over-engineered, want the smallest change that works"

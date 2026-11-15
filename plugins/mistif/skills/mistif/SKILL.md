@@ -23,6 +23,7 @@ A signpost. Read the request, name the situation, hand over to one skill, and ke
 | about to release, merge or deploy; CI, logging, retiring something, git, decision records | `mistif:ship` |
 | how something looks, reads or feels, or building UI components | `mistif:design` |
 | a choice with real stakes between options | `mistif:decide`, only if asked |
+| a question to answer from the web, with sources | `mistif:research` |
 | writing a prompt for another AI tool | `mistif:prompt` |
 | "which tool should I use" | `mistif:which-tool` |
 
