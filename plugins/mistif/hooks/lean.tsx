@@ -41,14 +41,20 @@ export async function leanPromptCompose($: any, e: any, next: any) {
   return text ? { ...r, sections: [...r.sections, { id: 'mistif:lean', text, scope: 'session' as const }] } : r
 }
 
+/** Sets the level and keeps it for the next session. The band's buttons call this directly: a `$.command.run` the mod
+ * starts skips the mod's own command.run hook, so it would land on commands/lean.md's "not loaded" text. */
+export async function setLean($: any, level: LeanLevel) {
+  await Promise.all([update($, leanLevel, () => level), $.store.set('leanLevel', level)])
+  $.ui.invalidate('ui.render')
+}
+
 /** /mistif:lean [off|lite|full|ultra]. No argument says where it stands. */
 export async function leanCommand($: any, e: any, next: any) {
   if (!['lean', 'mistif:lean'].includes(e.command)) return next(e)
   const arg = e.args.trim().toLowerCase()
   if (arg === '') return { text: `Lean mode is ${asLevel(await read($, leanLevel))}. Use /mistif:lean off|lite|full|ultra.` }
   if (!LEAN_LEVELS.includes(arg as LeanLevel)) return { text: `Unknown level "${arg}". Use off, lite, full or ultra.` }
-  await Promise.all([update($, leanLevel, () => arg as LeanLevel), $.store.set('leanLevel', arg)])
-  $.ui.invalidate('ui.render')
+  await setLean($, arg as LeanLevel)
   return { text: arg === 'off' ? 'Lean mode off.' : `Lean mode ${arg}: from the next reply.` }
 }
 

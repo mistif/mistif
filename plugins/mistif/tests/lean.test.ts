@@ -87,14 +87,18 @@ describe('the band: its own level buttons and numbers', () => {
   const BAND = { hasSurvey: false, isWorking: false, maxRows: 12, bodyColumns: 100, scroll: { offset: 0, bodyRows: 12 }, view: {} }
   const mount = ($: Engine) => $.ui.mount({ plugin: 'mistif', surface: 'desktop', component: 'AbovePrompt', props: BAND } as never)
 
-  test('the level buttons run /lean', async ($, on) => {
+  // A command the mod runs itself skips the mod's own command.run hook, so the run lands beneath it: in a session, on
+  // commands/lean.md's "not loaded" text. The mock beneath stands in for that file.
+  test('the level buttons set the level themselves: nothing reaches the command file', async ($, on) => {
     engine(on)
     const ran: string[] = []
     on('command.run', (_$, e) => { ran.push(`${e.command} ${e.args}`); return { text: '' } as never })
     await start($)
     const ui = await mount($)
-    await ui.press({ key: 'level-ultra' })
-    expect(ran).toEqual(['mistif:lean ultra'])
+    await ui.press({ key: 'level-full' })
+    expect(ran).toEqual([])
+    expect((await $.prompt.compose(input)).sections[1]).toMatchObject({ id: 'mistif:lean', text: leanText('full') })
+    expect(JSON.stringify(await ui.drawn())).toMatch(/"key":"level-full"[^}]*"variant":"primary"|"variant":"primary"[^}]*"key":"level-full"/)
   })
 
   test('Review and Audit go to mistif:review, never to another plugin', async ($, on) => {

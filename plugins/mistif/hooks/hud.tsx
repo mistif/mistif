@@ -1,6 +1,7 @@
 import { atom, read } from 'claude-code'
 
-import { LEAN_LEVELS, currentLean } from './lean'
+import { effortCommand } from './effort'
+import { LEAN_LEVELS, currentLean, setLean } from './lean'
 import { pluginKey, settingsFile, writeSettings } from './settings'
 
 // Look adapted from Effortless (MIT, HeyCubit): a dark rounded panel, art pinned to the right edge, ember colours near a limit.
@@ -200,14 +201,17 @@ export async function hudSessionMode($: any, e: any, next: any) {
   ]) as any[]
   const { Box, Text, Button } = $.ui.resolve(e) as any
   const modes: string[] = Array.isArray((e.props as any)?.modes) ? (e.props as any).modes : []
-  const run = (command: string, args = '') => async () => {
-    await $.command.run({ command, args }).catch(() => undefined)
+  // /mistif:hud is the mod's own command, so it is called here, not run: a `$.command.run` the mod starts skips the mod's
+  // own command.run hook and lands on commands/hud.md's "not loaded" text. Its answer shows as a toast.
+  const hud = (args: string) => async () => {
+    const r = await effortCommand($, { command: 'mistif:hud', args }, () => ({})).catch(() => undefined)
+    if (r?.text) $.ui.toast(r.text)
     $.ui.invalidate('ui.render')
   }
   const press: Record<string, () => unknown> = {
-    auto: run('mistif:hud', 'auto'),
+    auto: hud('auto'),
     settings: async () => { await loadCfg($); settingsCard = null; settingsOpen = true; $.ui.invalidate('ui.render') },
-    handoff: run('mistif:hud', 'handoff'),
+    handoff: hud('handoff'),
   }
   const items = footerItems({ auto, pick, app, cache, model, paused, judging, switched, advice, saving, compacting, modes })
   return (
@@ -245,6 +249,7 @@ export async function hudAbovePrompt($: any, e: any, next: any) {
   const turnWord = `${turns} ${turns === 1 ? 'turn' : 'turns'}`
 
   const { Box, Text, Button, Svg } = $.ui.resolve(e) as any
+  // Only for commands that are not the mod's own (mistif:review is a skill): the level buttons call setLean instead.
   const run = (command: string, args = '') => async () => {
     await $.command.run({ command, args }).catch(() => undefined)
     $.ui.invalidate('ui.render')
@@ -339,7 +344,7 @@ export async function hudAbovePrompt($: any, e: any, next: any) {
             key={`level-${l}`}
             label={l}
             {...(l === level ? { variant: 'primary' as const } : { plain: true as const, dimColor: true })}
-            onPress={run('mistif:lean', l)}
+            onPress={() => setLean($, l)}
           />
         ))}
         {hot ? <Text color={EMBER} bold>  ✦ running hot</Text> : null}

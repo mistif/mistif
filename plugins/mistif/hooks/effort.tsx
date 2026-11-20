@@ -1646,20 +1646,22 @@ export async function effortAbovePrompt($: any, e: any, next: any) {
   void afterLoad($).catch(() => undefined)
   await restoreCache($).catch(() => undefined)
   if (e.props.hasSurvey) return next(e)
-  const card = await compactCard($, !!e.props.isWorking)
-  if (!card) return next(e)
-  if (e.surface === 'terminal') {
-    if (card.kind !== 'ready') return next(e)
-    const { Button } = $.ui.resolve(e)
-    return terminalPanel($, e, 'handoff-ready', '⇥ Handoff ready', 'Clear this chat and carry on in a new one? It stays in /resume.', [
+  // A card that cannot be read is no card: a throw here would fail the one hook every band shares, so none would draw.
+  const card = await compactCard($, !!e.props.isWorking).catch(() => null)
+  if (!card || (e.surface === 'terminal' && card.kind !== 'ready')) return next(e)
+  // The card sits above the band, never in its place: the hud stays on while a handoff or compact runs or waits.
+  const below = await next(e).catch(() => undefined)
+  const { Box, Button } = $.ui.resolve(e)
+  const mine = e.surface === 'terminal'
+    ? terminalPanel($, e, 'handoff-ready', '⇥ Handoff ready', 'Clear this chat and carry on in a new one? It stays in /resume.', [
       ...handoffAskButtons($, Button, true),
       <Button key="handoff-later" plain hotkey="n" label="Not now" onPress={() => answerHandoff($, 'cancel')} />,
     ])
-  }
-  return handoffCardTree($, e, card,
-    card.kind === 'ready'
-      ? () => answerHandoff($, 'cancel')
-      : !cardRunning(card.kind) ? () => update($, handoffCard, c => (c && !cardRunning(c.kind) ? null : c)) : undefined)
+    : handoffCardTree($, e, card,
+      card.kind === 'ready'
+        ? () => answerHandoff($, 'cancel')
+        : !cardRunning(card.kind) ? () => update($, handoffCard, c => (c && !cardRunning(c.kind) ? null : c)) : undefined)
+  return below ? <Box flexDirection="column">{mine}{below}</Box> : mine
 }
 
 /** Lite: one session-scoped section at the end of the system prompt, added once. Full: nothing is added. */

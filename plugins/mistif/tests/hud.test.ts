@@ -139,7 +139,9 @@ describe('footer: mounted', () => {
     for (const key of ['auto', 'settings', 'handoff']) expect(text).toContain(`"key":"${key}"`)
   })
 
-  test('the power button runs the Auto command, the handoff button the handoff command', async ($, on) => {
+  // A command the mod runs itself skips the mod's own command.run hook, so /mistif:hud run from these buttons landed on
+  // commands/hud.md's "not loaded" text. The mock beneath stands in for that file.
+  test('the power and handoff buttons are answered by the mod: nothing reaches the command file', async ($, on) => {
     session(on)
     const ran: string[] = []
     on('command.run', (_$, e) => {
@@ -147,10 +149,14 @@ describe('footer: mounted', () => {
       return { text: 'ok' }
     })
     await start($)
+    const debug = async () => String((await $.command.run({ command: 'hud', args: 'debug' })).text)
+    const autoBefore = (await debug()).match(/auto: (true|false)/)?.[1]
     const ui = await $.ui.mount({ plugin: 'mistif', surface: 'desktop', component: 'SessionMode', props: { modes: [] } } as never)
     await ui.press({ key: 'auto' })
+    expect((await debug()).match(/auto: (true|false)/)?.[1]).toBe(autoBefore === 'true' ? 'false' : 'true')
     await ui.press({ key: 'handoff' })
-    expect(ran).toEqual(['mistif:hud auto', 'mistif:hud handoff'])
+    expect(await debug()).toContain('handoff: writing')
+    expect(ran).toEqual([])
   })
 
   test('the settings button opens the settings card above the prompt', async ($, on) => {
@@ -319,6 +325,17 @@ describe('the band above the prompt', () => {
     await start($)
     const ui = await $.ui.mount({ plugin: 'mistif', surface: 'desktop', component: 'AbovePrompt', props: { ...BAND, hasSurvey: true } } as never).catch(() => null)
     expect(ui === null || !JSON.stringify(await ui.drawn()).includes('$42.90')).toBe(true)
+  })
+
+  test('a handoff card sits above the band, never in its place', async ($, on) => {
+    session(on, limits(40, 20))
+    await start($)
+    const foot = await $.ui.mount({ plugin: 'mistif', surface: 'desktop', component: 'SessionMode', props: { modes: [] } } as never)
+    await foot.press({ key: 'handoff' })
+    const text = JSON.stringify(await (await $.ui.mount({ plugin: 'mistif', surface: 'desktop', component: 'AbovePrompt', props: BAND } as never)).drawn())
+    expect(text).toContain('Handing off')
+    expect(text).toContain('"key":"hud"')
+    expect(text).toContain('$42.90')
   })
 
   test('little room: a plain line instead of the panel', async ($, on) => {
